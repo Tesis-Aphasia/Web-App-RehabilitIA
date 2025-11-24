@@ -82,7 +82,6 @@ const EjerciciosTerapeuta = () => {
 
                 return { ...e, ...extra };
               } catch (err) {
-                console.error("❌ Error cargando detalles:", e.id, err);
                 return e;
               }
             })
@@ -93,7 +92,6 @@ const EjerciciosTerapeuta = () => {
             .map((r) => r.value);
 
           setExercises(fulfilled);
-          console.log("✅ Ejercicios visibles actualizados:", fulfilled);
         }
       );
 
@@ -118,7 +116,6 @@ const EjerciciosTerapeuta = () => {
       if (exercise.terapia === "SR") setShowSREditor(true);
       else setShowVnestEditor(true);
     } catch (err) {
-      console.error("❌ Error cargando detalles:", err);
     } finally {
       setLoadingModal(false);
     }
@@ -138,7 +135,6 @@ const EjerciciosTerapeuta = () => {
       if (exercise.terapia === "VNEST") setShowVnestViewer(true);
       else if (exercise.terapia === "SR") setShowSRViewer(true);
     } catch (err) {
-      console.error("❌ Error cargando detalles del ejercicio:", err);
     } finally {
       setLoadingModal(false);
     }
@@ -149,7 +145,6 @@ const EjerciciosTerapeuta = () => {
     setShowSREditor(false);
     setSelectedExercise(null);
     if (updated) {
-      console.log("✅ Ejercicio actualizado.");
       setRefreshKey((prev) => prev + 1);
     }
   };

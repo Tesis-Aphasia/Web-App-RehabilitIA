@@ -22,7 +22,6 @@ export async function getPatientById(patientId) {
     if (!snap.exists()) return null;
     return { id: snap.id, ...snap.data() };
   } catch (err) {
-    console.error("Error al obtener paciente:", err);
     throw err;
   }
 }
@@ -35,7 +34,6 @@ export async function getPatientByEmail(email) {
     if (querySnapshot.empty) return null;
     return { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
   } catch (err) {
-    console.error("Error al obtener paciente por email:", err);
     throw err;
   }
 }
@@ -45,7 +43,6 @@ export async function updatePatient(patientId, data) {
     const ref = doc(db, "pacientes", patientId);
     await updateDoc(ref, data);
   } catch (err) {
-    console.error("Error al actualizar paciente:", err);
     throw err;
   }
 }
@@ -57,18 +54,13 @@ export async function assignPatientToTherapist(patientId, therapistId) {
     
     const ref2 = doc(db, "terapeutas", therapistId);
     await updateDoc(ref2, { pacientes: arrayUnion(patientId) });
-
-    console.log(`✅ Paciente ${patientId} asignado a ${therapistId}`);
   } catch (err) {
-    console.error("Error al asignar paciente:", err);
     throw err;
   }
 }
 
 export async function assignExerciseToPatient(patientId, exerciseId) {
   try {
-    console.log("📤 Asignando ejercicio:", { patientId, exerciseId });
-
     // 1️⃣ Obtener el ejercicio base
     const exerciseRef = doc(db, "ejercicios", exerciseId);
     const exerciseSnap = await getDoc(exerciseRef);
@@ -123,11 +115,9 @@ export async function assignExerciseToPatient(patientId, exerciseId) {
       personalizado,
     });
 
-    console.log(`✅ Ejercicio ${exerciseId} asignado correctamente al paciente ${patientId}`);
     return { ok: true, message: `Ejercicio ${exerciseId} asignado al paciente ${patientId}` };
 
   } catch (error) {
-    console.error("❌ Error al asignar ejercicio:", error);
     throw error;
   }
 }

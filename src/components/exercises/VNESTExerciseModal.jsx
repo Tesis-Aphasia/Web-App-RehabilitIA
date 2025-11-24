@@ -23,7 +23,6 @@ const VNESTExerciseModal = ({ exercise, onClose }) => {
           setPatientName(patient.nombre || patient.email || "Sin nombre");
         }
       } catch (err) {
-        console.error("Error obteniendo paciente:", err);
       }
     };
 
@@ -40,7 +39,6 @@ const VNESTExerciseModal = ({ exercise, onClose }) => {
           setTherapistName(therapist.nombre || therapist.email || "Sin nombre");
         }
       } catch (err) {
-        console.error("Error obteniendo terapeuta:", err);
       }
     };
     fetchTherapistData();

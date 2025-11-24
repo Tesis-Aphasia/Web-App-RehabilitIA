@@ -18,7 +18,6 @@ const AddExerciseIA = () => {
         const data = await getAllContexts();
         setAllContexts(data);
       } catch (err) {
-        console.error("❌ Error al cargar contextos:", err);
         alert("Error al cargar los contextos desde la base de datos.");
       }
     };
@@ -42,7 +41,6 @@ const AddExerciseIA = () => {
       });
       setResult(data);
     } catch (err) {
-      console.error("Error generando ejercicio:", err);
       alert("Ocurrió un error al generar el ejercicio.");
     } finally {
       setLoading(false);

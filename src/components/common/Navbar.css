@@ -1,7 +1,7 @@
 :root {
-  --primary: #ef7e06;
+  --primary: #da9371;
   --primary-dark: #c96a05;
-  --gradient-accent: linear-gradient(90deg, #ef7e06, #f8b86b);
+  --gradient-accent: linear-gradient(90deg, #b0d3eb, #da9371);
   --text-dark: #2c2c2c;
   --text-muted: #707070;
   --bg-blur: rgba(255, 255, 255, 0.85);
@@ -23,7 +23,7 @@
 
 .navbar-modern.scrolled {
   background: rgba(255, 255, 255, 0.95);
-  border-bottom: 2px solid rgba(239, 126, 6, 0.15);
+  border-bottom: 2px solid rgba(218, 147, 113, 0.15);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
@@ -100,8 +100,15 @@
 
 /* === ANIMACIÓN SUBRAYADO === */
 @keyframes underlineGrow {
-  from { transform: scaleX(0); opacity: 0; }
-  to { transform: scaleX(1); opacity: 1; }
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
 }
 
 /* === EMAIL === */
@@ -131,7 +138,7 @@
 .btn-logout:hover {
   filter: brightness(1.1);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(239, 126, 6, 0.25);
+  box-shadow: 0 4px 12px rgba(218, 147, 113, 0.25);
 }
 
 /* === RESPONSIVE === */

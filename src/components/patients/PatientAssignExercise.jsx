@@ -55,7 +55,6 @@ const PatientAssignExercise = ({ open, onClose, patientId }) => {
             detailedMatches.push({ ...ex, ...detail });
           }
         } catch (err) {
-          console.warn("⚠️ Error cargando detalles VNEST:", ex.id, err);
         }
       }
 
@@ -71,7 +70,6 @@ const PatientAssignExercise = ({ open, onClose, patientId }) => {
             detailedMatches.push({ ...ex, ...detail });
           }
         } catch (err) {
-          console.warn("⚠️ Error cargando detalles SR:", ex.id, err);
         }
       }
 
@@ -104,7 +102,6 @@ const PatientAssignExercise = ({ open, onClose, patientId }) => {
         setResults(finalResults);
       }
     } catch (err) {
-      console.error("Error buscando ejercicios:", err);
       setMessage("❌ Error al buscar ejercicios.");
     } finally {
       setLoading(false);
@@ -124,7 +121,6 @@ const PatientAssignExercise = ({ open, onClose, patientId }) => {
       if (exercise.terapia === "VNEST") setShowVnestViewer(true);
       else if (exercise.terapia === "SR") setShowSRViewer(true);
     } catch (err) {
-      console.error("Error cargando detalles:", err);
       setMessage("❌ Error al cargar detalles del ejercicio.");
     } finally {
       setLoading(false);
@@ -140,7 +136,6 @@ const PatientAssignExercise = ({ open, onClose, patientId }) => {
       setMessage(`✅ Ejercicio asignado correctamente.`);
       setTimeout(() => onClose(true), 1500);
     } catch (err) {
-      console.error(err);
       setMessage("❌ Error al asignar el ejercicio.");
     } finally {
       setLoading(false);

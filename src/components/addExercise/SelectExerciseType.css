@@ -1,6 +1,6 @@
 :root {
-  --primary: #ef7e06;
-  --primary-dark: #d86e03;
+  --primary: #da9371;
+  --primary-dark: #c17d5e;
   --success: #198754;
   --bg: #fff;
   --text: #222;
@@ -55,7 +55,7 @@
 .exercise-option:hover {
   transform: translateY(-6px);
   border-color: var(--primary);
-  box-shadow: 0 10px 25px rgba(239, 126, 6, 0.25);
+  box-shadow: 0 10px 25px rgba(218, 147, 113, 0.25);
 }
 
 /* === ICONOS === */
@@ -72,7 +72,7 @@
 }
 
 .icon-circle.ia {
-  background-color: rgba(239, 126, 6, 0.1);
+  background-color: rgba(218, 147, 113, 0.1);
   color: var(--primary-dark);
 }
 

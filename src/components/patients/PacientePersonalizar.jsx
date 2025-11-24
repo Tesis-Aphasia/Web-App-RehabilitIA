@@ -40,7 +40,6 @@ const PacientePersonalizar = ({ open, onClose, pacienteId }) => {
         setMessage(`❌ Error: ${result.error || "No se pudo personalizar"}`);
       }
     } catch (error) {
-      console.error("Error al personalizar:", error);
       setMessage(`❌ ${error.message}`);
     } finally {
       setLoading(false);

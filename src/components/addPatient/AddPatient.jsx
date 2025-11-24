@@ -35,7 +35,6 @@ const AddPatient = ({ open, onClose, terapeutaId }) => {  // 👈 antes terapeut
         setPaciente({ id: doc.id, ...doc.data() }); // id = UID real del paciente
       }
     } catch (e) {
-      console.error("Error al buscar el paciente:", e);
       setError("Error al buscar el paciente.");
     } finally {
       setLoading(false);
@@ -54,7 +53,6 @@ const AddPatient = ({ open, onClose, terapeutaId }) => {  // 👈 antes terapeut
       setSuccess(`✅ Paciente ${paciente.nombre || paciente.email} asignado con éxito.`);
       setTimeout(() => onClose(true), 1200);
     } catch (e) {
-      console.error("Error al asignar paciente:", e);
       setError("Error al asignar el paciente.");
     } finally {
       setLoading(false);

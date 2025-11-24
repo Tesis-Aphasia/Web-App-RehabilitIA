@@ -1,6 +1,6 @@
 :root {
-  --primary: #ef7e06;
-  --primary-dark: #d86e03;
+  --primary: #da9371;
+  --primary-dark: #c17d5e;
   --text: #222;
   --muted: #666;
   --success: #198754;
@@ -56,12 +56,12 @@
 }
 
 .paciente-page .btn-secondary {
-  background: rgba(239, 126, 6, 0.1);
+  background: rgba(218, 147, 113, 0.1);
   color: var(--primary-dark);
 }
 
 .paciente-page .btn-secondary:hover {
-  background: rgba(239, 126, 6, 0.2);
+  background: rgba(218, 147, 113, 0.2);
 }
 
 /* === TABLA === */
@@ -96,7 +96,7 @@
 }
 
 .paciente-page .table-hover tbody tr:hover {
-  background: rgba(239, 126, 6, 0.06);
+  background: rgba(218, 147, 113, 0.06);
   transition: background 0.25s ease;
 }
 
@@ -232,7 +232,7 @@
 
 .paciente-page .modal-body input:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(239, 126, 6, 0.15);
+  box-shadow: 0 0 0 3px rgba(218, 147, 113, 0.15);
   outline: none;
 }
 
@@ -269,7 +269,7 @@
   color: var(--primary-dark);
   text-align: center;
   font-weight: 500;
-  border: 1px solid rgba(239, 126, 6, 0.2);
+  border: 1px solid rgba(218, 147, 113, 0.2);
 }
 
 /* === ANIMACIONES === */
@@ -321,7 +321,7 @@
 }
 
 .tab-btn {
-  background: rgba(239, 126, 6, 0.1);
+  background: rgba(218, 147, 113, 0.1);
   color: var(--primary-dark);
   font-weight: 600;
   padding: 0.6rem 1.2rem;
@@ -332,14 +332,14 @@
 }
 
 .tab-btn:hover {
-  background: rgba(239, 126, 6, 0.2);
+  background: rgba(218, 147, 113, 0.2);
 }
 
 .active-tab {
   background: var(--primary);
   color: #fff;
   border-color: var(--primary-dark);
-  box-shadow: 0 3px 10px rgba(239, 126, 6, 0.25);
+  box-shadow: 0 3px 10px rgba(218, 147, 113, 0.25);
 }
 
 .paciente-header {

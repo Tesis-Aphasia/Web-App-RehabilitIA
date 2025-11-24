@@ -51,15 +51,13 @@ export async function loginUnified(email, password) {
       const snap = await getDoc(ref);
 
       if (!snap.exists()) {
-        console.warn("El terapeuta no tiene datos adicionales en Firestore.");
-        return { success: true, user, data: null };
+            return { success: true, user, data: null };
       }
 
       // 3️⃣ Retornar datos combinados
       return { success: true, user, data: { id: snap.id, ...snap.data() } };
     } catch (err) {
-      console.error("Error al iniciar sesión:", err);
-      return { success: false, error: err.message };
+        return { success: false, error: err.message };
     }
   }
 
@@ -72,7 +70,6 @@ export async function getTherapistData(therapistId) {
     const snap = await getDoc(ref);
     return snap.exists() ? { id: snap.id, ...snap.data() } : null;
   } catch (err) {
-    console.error("Error obteniendo terapeuta:", err);
     return null;
   }
 }
@@ -176,7 +173,6 @@ export async function getTherapistProfile(therapistId) {
     if (snap.exists()) return { id: snap.id, ...snap.data() };
     return null;
   } catch (err) {
-    console.error("Error obteniendo perfil del terapeuta:", err);
     throw err;
   }
 }
@@ -204,7 +200,6 @@ export async function resetTherapistPassword(email) {
     });
     return { success: true };
   } catch (error) {
-    console.error("Error enviando correo de recuperación:", error);
     return { success: false, message: error.message };
   }
 }

@@ -30,9 +30,6 @@ export const approveSolicitud = async (solicitud) => {
 
   const passwordTemp = "rehab_" + Math.random().toString(36).slice(-6);
 
-  console.log("datos para aprobar:", {
-    email: solicitud.email,
-    password: passwordTemp,});
 
   await aprobarTerapeuta({
   email: solicitud.email,

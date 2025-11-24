@@ -1,5 +1,5 @@
 :root {
-  --primary: #ef7e06;
+  --primary: #da9371;
   --primary-dark: #c96a05;
   --bg-light: #f8fafc;
   --card-bg: #ffffff;
@@ -82,7 +82,7 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background: rgba(239, 126, 6, 0.08);
+  background: rgba(218, 147, 113, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -90,7 +90,7 @@
 }
 
 .icon-wrapper.orange {
-  background: rgba(239, 126, 6, 0.1);
+  background: rgba(218, 147, 113, 0.1);
 }
 
 .icon-wrapper.blue {

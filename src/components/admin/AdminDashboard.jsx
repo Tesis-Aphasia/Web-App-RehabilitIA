@@ -28,7 +28,6 @@ const AdminDashboard = () => {
       alert(`✅ Solicitud aprobada. Se ha enviado un correo a ${solicitud.email}.`);
       loadSolicitudes();
     } catch (error) {
-      console.error("Error al aprobar:", error);
       alert("⚠️ Error al aprobar la solicitud. Revisa la consola o Firebase Functions.");
     }
   };
@@ -39,7 +38,6 @@ const handleReject = async (solicitud) => {
     alert(`Correo de rechazo enviado a ${solicitud.email}.`);
     loadSolicitudes();
   } catch (err) {
-    console.error("Error al rechazar:", err);
     alert("Error al rechazar la solicitud. Revisa Firebase Functions.");
   }
 };

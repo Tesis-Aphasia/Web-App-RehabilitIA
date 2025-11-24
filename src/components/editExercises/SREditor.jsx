@@ -31,7 +31,6 @@ const SREditor = ({ open, onClose, exercise }) => {
           revisado: Boolean(exercise.revisado),
         });
       } catch (err) {
-        console.error("❌ Error cargando ejercicio SR:", err);
         setError("No se pudo cargar el ejercicio.");
       } finally {
         setLoading(false);
@@ -64,7 +63,6 @@ const SREditor = ({ open, onClose, exercise }) => {
         onClose(true);
       }, 1500);
     } catch (e) {
-      console.error("Error guardando ejercicio SR:", e);
       setError(e?.message || "Error al guardar el ejercicio.");
     } finally {
       setSaving(false);

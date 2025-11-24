@@ -36,7 +36,6 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
           oraciones: extra.oraciones || [],
         });
       } catch (err) {
-        console.error("❌ Error cargando VNEST:", err);
         setError("No se pudo cargar el ejercicio.");
       } finally {
         setLoading(false);
@@ -95,7 +94,6 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
         onClose(true);
       }, 1500);
     } catch (err) {
-      console.error("❌ Error guardando VNEST:", err);
       setError("No se pudo guardar el ejercicio.");
     } finally {
       setSaving(false);

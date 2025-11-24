@@ -50,7 +50,6 @@ export async function getVisibleExercisesOnce(therapistId) {
 
     return visibleExercises;
   } catch (err) {
-    console.error("❌ Error en getVisibleExercisesOnce:", err);
     return [];
   }
 }
@@ -63,7 +62,6 @@ export async function getVisibleExercises(therapistId, callback) {
     const pacientesSnap = await getDocs(pacientesQuery);
     const patientIds = pacientesSnap.docs.map((doc) => doc.id); // puedes usar .email si ese es el campo correcto
 
-    console.log("📋 Pacientes del terapeuta:", patientIds);
 
     // 2️⃣ Suscribirse a todos los ejercicios
     const ejerciciosRef = collection(db, "ejercicios");
@@ -87,7 +85,6 @@ export async function getVisibleExercises(therapistId, callback) {
 
     return unsubscribe;
   } catch (err) {
-    console.error("❌ Error en getVisibleExercises:", err);
     return () => {}; // fallback vacío
   }
 }
@@ -102,14 +99,11 @@ export async function getExerciseDetails(id, terapia) {
 
     if (snap.exists()) {
       const data = snap.data();
-      console.log(`📄 Detalles obtenidos de ${colName}/${id}:`, data);
       return data;
     } else {
-      console.warn(`⚠️ No se encontró documento ${id} en ${colName}`);
       return null;
     }
   } catch (err) {
-    console.error("❌ Error obteniendo detalles del ejercicio:", err);
     throw err;
   }
 }
@@ -122,7 +116,6 @@ export async function getExerciseById(id) {
     if (snap.exists()) return snap.data();
     return null;
   } catch (err) {
-    console.error("Error obteniendo ejercicio:", err);
     throw err;
   }
 }
@@ -138,9 +131,7 @@ export async function deleteExercise(id, terapia) {
     else if (terapia === "SR")
       await deleteDoc(doc(db, "ejercicios_SR", id));
 
-    console.log(`🗑️ Ejercicio ${id} eliminado (${terapia})`);
   } catch (err) {
-    console.error("Error eliminando ejercicio:", err);
   }
 }
 
@@ -151,9 +142,7 @@ export async function updateExercise(id, data) {
   try {
     const ref = doc(db, "ejercicios", id);
     await updateDoc(ref, data);
-    console.log(`✅ Ejercicio ${id} actualizado`);
   } catch (err) {
-    console.error("Error al actualizar ejercicio:", err);
     throw err;
   }
 }
@@ -163,9 +152,7 @@ export async function updateExerciseSR(id, data) {
   try {
     const ref = doc(db, "ejercicios_SR", id);
     await updateDoc(ref, data);
-    console.log(`✅ Ejercicio SR ${id} actualizado`);
   } catch (err) {
-    console.error("Error al actualizar ejercicio SR:", err);
     throw err;
   } 
 }
@@ -184,7 +171,6 @@ export async function generateExercise(payload) {
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     return await res.json();
   } catch (err) {
-    console.error("Error generando ejercicio IA:", err);
     throw err;
   }
 }
@@ -212,10 +198,8 @@ export async function personalizeExercise(userId, exerciseId, profile, creado_po
       throw new Error(data.error || "Error al personalizar el ejercicio");
     }
 
-    console.log("✅ Ejercicio personalizado correctamente:", data);
     return data;
   } catch (err) {
-    console.error("❌ Error en personalizeExercise:", err);
     throw err;
   }
 }

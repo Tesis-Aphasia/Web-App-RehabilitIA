@@ -1,5 +1,5 @@
 :root {
-    --primary: #ef7e06;
+    --primary: #da9371;
     --primary-dark: #c96a05;
     --bg: #f8fafc;
     --card-bg: #ffffff;
@@ -61,7 +61,7 @@
   
   .sr-page .filter-group select:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(239, 126, 6, 0.15);
+    box-shadow: 0 0 0 3px rgba(218, 147, 113, 0.15);
     outline: none;
   }
   
@@ -94,7 +94,7 @@
   }
   
   .sr-page .table tbody tr:hover {
-    background: rgba(239, 126, 6, 0.05);
+    background: rgba(218, 147, 113, 0.05);
   }
   
   /* IDs opacos */

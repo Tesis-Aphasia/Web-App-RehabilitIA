@@ -40,7 +40,6 @@ const PacienteDetail = () => {
         const patientInfo = await getPatientById(pacienteId);
         setPatientInfo(patientInfo);
       } catch (error) {
-        console.error("Error cargando información del paciente:", error);
       }
     };
 
@@ -73,8 +72,7 @@ const PacienteDetail = () => {
 
               return { ...meta, ...extra, ...e };
             } catch (err) {
-              console.error("Error cargando detalles del ejercicio:", id, err);
-              return e;
+                    return e;
             }
           })
         );
@@ -88,7 +86,6 @@ const PacienteDetail = () => {
 
         setDetailedExercises(detailed);
       } catch (error) {
-        console.error("Error cargando ejercicios detallados:", error);
       }
     };
     loadDetails();
@@ -108,7 +105,6 @@ const PacienteDetail = () => {
         if (exercise.terapia === "VNEST") setShowVnestViewer(true);
         else if (exercise.terapia === "SR") setShowSRViewer(true);
       } catch (err) {
-        console.error("❌ Error cargando detalles del ejercicio:", err);
       }
     };
 

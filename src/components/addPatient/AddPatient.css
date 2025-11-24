@@ -1,6 +1,6 @@
 :root {
-  --primary: #ef7e06;
-  --primary-dark: #d86e03;
+  --primary: #da9371;
+  --primary-dark: #c17d5e;
   --bg: #fff;
 }
 
@@ -33,7 +33,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid rgba(239, 126, 6, 0.2);
+  border-bottom: 2px solid rgba(218, 147, 113, 0.2);
   padding-bottom: 0.6rem;
   margin-bottom: 1rem;
 }
@@ -94,7 +94,7 @@
 /* === CARD DEL PACIENTE === */
 .patient-card {
   background: #fffaf5;
-  border: 1px solid rgba(239, 126, 6, 0.2);
+  border: 1px solid rgba(218, 147, 113, 0.2);
   border-radius: 0.8rem;
   padding: 1rem;
   transition: transform 0.2s ease;
@@ -102,7 +102,7 @@
 
 .patient-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(239, 126, 6, 0.15);
+  box-shadow: 0 4px 12px rgba(218, 147, 113, 0.15);
 }
 
 .patient-card p {
