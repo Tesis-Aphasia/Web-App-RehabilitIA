@@ -1,8 +1,10 @@
 /* ---------- VARIABLES GLOBALES ---------- */
 :root {
-  --primary: #ef7e06;
-  --primary-dark: #d86e03;
-  --background-light: #f8f7f5;
+  --primary: #da9371;
+  --primary-dark: #c17d5e;
+  --secondary-blue: #5ea3ef;
+  --light-blue: #ACD3E8;
+  --background-light: #fdf7f2;
   --background-dark: #23190f;
   --text-color: #333333;
   --muted-text: #6c757d;
@@ -30,13 +32,11 @@ body,
 
 /* ---------- ESTILOS GLOBALes ---------- */
 body {
-  background: linear-gradient(
-    135deg,
-    #ffffff 0%,
-    #fff9f3 35%,
-    #ffe9cf 75%,
-    #ffd8aa 100%
-  );
+  background: linear-gradient(135deg,
+      #ffffff 0%,
+      #fdf7f2 35%,
+      #f5e6d8 75%,
+      #e8d4c0 100%);
   background-attachment: fixed;
 }
 
@@ -103,13 +103,13 @@ a:hover {
 }
 
 .table-hover tbody tr:hover {
-  background-color: rgba(239, 126, 6, 0.05);
+  background-color: rgba(218, 147, 113, 0.05);
 }
 
 /* ---------- INPUTS ---------- */
 .form-control:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 0.2rem rgba(239, 126, 6, 0.25);
+  box-shadow: 0 0 0 0.2rem rgba(218, 147, 113, 0.25);
 }
 
 /* ---------- SCROLLBAR ---------- */

@@ -1,5 +1,5 @@
 :root {
-  --primary: #ef7e06;
+  --primary: #da9371;
   --primary-dark: #c96a05;
   --bg: #ffffff;
   --text: #1e1e1e;
@@ -7,7 +7,7 @@
   --success: #1f9d55;
   --card-bg: #fffaf5;
   --card-hover: #fff5eb;
-  --border: rgba(239, 126, 6, 0.25);
+  --border: rgba(218, 147, 113, 0.25);
 }
 
 /* === OVERLAY === */
@@ -80,7 +80,7 @@
   width: 6px;
 }
 .vnest-body::-webkit-scrollbar-thumb {
-  background-color: rgba(239, 126, 6, 0.4);
+  background-color: rgba(218, 147, 113, 0.4);
   border-radius: 10px;
 }
 
@@ -130,7 +130,7 @@ label {
 .form-control:focus,
 .form-select:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(239, 126, 6, 0.15);
+  box-shadow: 0 0 0 3px rgba(218, 147, 113, 0.15);
 }
 
 /* === CHECKBOX === */
@@ -159,7 +159,7 @@ label {
 
 .pair-card:hover {
   background: var(--card-hover);
-  box-shadow: 0 2px 10px rgba(239, 126, 6, 0.12);
+  box-shadow: 0 2px 10px rgba(218, 147, 113, 0.12);
 }
 
 .pair-header {
@@ -172,7 +172,7 @@ label {
 .expansion-block {
   margin-top: 0.8rem;
   padding-left: 0.6rem;
-  border-left: 3px solid rgba(239, 126, 6, 0.25);
+  border-left: 3px solid rgba(218, 147, 113, 0.25);
 }
 
 .expansion-block label {
@@ -272,7 +272,7 @@ label {
 .btn-primary:hover {
   background: var(--primary-dark);
   transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(239, 126, 6, 0.25);
+  box-shadow: 0 4px 10px rgba(218, 147, 113, 0.25);
 }
 
 .btn-light {

@@ -1,5 +1,5 @@
 :root {
-  --primary: #ef7e06;
+  --primary: #da9371;
   --primary-dark: #c96a05;
   --muted: #6b6b6b;
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -69,7 +69,7 @@ h1 { color: var(--primary-dark); letter-spacing: -0.5px; }
 
 .form-control:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(239, 126, 6, 0.2);
+  box-shadow: 0 0 0 3px rgba(218, 147, 113, 0.2);
   outline: none;
 }
 
@@ -89,7 +89,7 @@ h1 { color: var(--primary-dark); letter-spacing: -0.5px; }
 .btn-login:hover {
   background: var(--primary-dark);
   transform: translateY(-1px);
-  box-shadow: 0 6px 12px rgba(239, 126, 6, 0.25);
+  box-shadow: 0 6px 12px rgba(218, 147, 113, 0.25);
 }
 
 /* === ALERTAS === */

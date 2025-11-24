@@ -1,5 +1,5 @@
 :root {
-  --primary: #ef7e06;
+  --primary: #da9371;
   --primary-dark: #c96a05;
   --bg: #f8fafc;
   --card-bg: #ffffff;
@@ -51,7 +51,7 @@
 
 .patients-page .search-input:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(239, 126, 6, 0.15);
+  box-shadow: 0 0 0 3px rgba(218, 147, 113, 0.15);
   outline: none;
 }
 
@@ -80,12 +80,12 @@
 }
 
 .patients-page .btn-secondary {
-  background: rgba(239, 126, 6, 0.1);
+  background: rgba(218, 147, 113, 0.1);
   color: var(--primary-dark);
 }
 
 .patients-page .btn-secondary:hover {
-  background: rgba(239, 126, 6, 0.2);
+  background: rgba(218, 147, 113, 0.2);
 }
 
 /* === TABLA ESTILO VNEST === */
@@ -120,7 +120,7 @@
 }
 
 .patients-page .table-hover tbody tr:hover {
-  background: rgba(239, 126, 6, 0.06);
+  background: rgba(218, 147, 113, 0.06);
   transition: background 0.25s ease;
 }
 
