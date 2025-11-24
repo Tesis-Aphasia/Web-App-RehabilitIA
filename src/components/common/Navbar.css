@@ -1,7 +1,7 @@
 :root {
   --primary: #da9371;
   --primary-dark: #c96a05;
-  --gradient-accent: linear-gradient(90deg, #da9371, #b0d3eb);
+  --gradient-accent: linear-gradient(90deg, #b0d3eb, #da9371);
   --text-dark: #2c2c2c;
   --text-muted: #707070;
   --bg-blur: rgba(255, 255, 255, 0.85);
