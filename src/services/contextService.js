@@ -13,10 +13,8 @@ export async function getAllContexts() {
       ...doc.data(),
     }));
 
-    console.log(`Contextos cargados: ${contexts.length}`);
     return contexts;
   } catch (err) {
-    console.error("Error al obtener contextos:", err);
     throw err;
   }
 }

@@ -26,7 +26,6 @@ const SRExerciseModal = ({ exercise, onClose }) => {
           setPatientName(patient.nombre || patient.email || "Sin nombre");
         }
       } catch (err) {
-        console.error("Error obteniendo paciente:", err);
       }
     };
 
@@ -43,8 +42,7 @@ const SRExerciseModal = ({ exercise, onClose }) => {
             setTherapistName(therapist.nombre || therapist.email || "Sin nombre");
           }
         } catch (err) {
-          console.error("Error obteniendo terapeuta:", err);
-        }
+          }
       };
       fetchTherapistData();
     }, [exercise?.creado_por]);
