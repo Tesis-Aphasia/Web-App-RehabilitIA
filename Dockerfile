@@ -21,6 +21,9 @@ RUN npm run build
 # Stage 2: Production server with nginx
 FROM nginx:alpine AS production
 
+# 🔥 Instalar wget para que funcione el HEALTHCHECK
+RUN apk add --no-cache wget
+
 # Copy custom nginx configuration
 COPY --from=builder /app/dist /usr/share/nginx/html
 
