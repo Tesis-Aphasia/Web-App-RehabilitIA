@@ -162,7 +162,7 @@ export async function updateExerciseSR(id, data) {
  */
 export async function generateExercise(payload) {
   try {
-    const res = await fetch("http://localhost:8000/context/generate", {
+    const res = await fetch("https://afasia.virtual.uniandes.edu.co/api/context/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -179,7 +179,7 @@ export async function generateExercise(payload) {
 
 export async function personalizeExercise(userId, exerciseId, profile, creado_por) {
   try {
-    const response = await fetch("http://localhost:8000/personalize-exercise/", {
+    const response = await fetch("https://afasia.virtual.uniandes.edu.co/api/personalize-exercise/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

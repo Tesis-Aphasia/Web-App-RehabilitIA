@@ -195,7 +195,7 @@ export const sendTherapistRequest = async (data) => {
 export async function resetTherapistPassword(email) {
   try {
     await sendPasswordResetEmail(auth, email, {
-      url: "http://localhost:5173/terapeuta/login",
+      url: "https://afasia.virtual.uniandes.edu.co/web",
       handleCodeInApp: true,
     });
     return { success: true };
