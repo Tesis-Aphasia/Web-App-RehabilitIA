@@ -95,7 +95,7 @@ const TerapeutaRegistro = () => {
                 <div className="mt-3">
                   <button
                     className="btn-login"
-                    onClick={() => navigate("/terapeuta/login")}
+                    onClick={() => navigate("/web")}
                   >
                     Volver al inicio de sesión
                   </button>
@@ -179,7 +179,7 @@ const TerapeutaRegistro = () => {
 
                 <p className="small text-muted text-center mt-3">
                   ¿Ya tienes una cuenta?{" "}
-                  <a href="/" className="forgot-link fw-semibold">
+                  <a href="/web" className="forgot-link fw-semibold">
                     Inicia sesión
                   </a>
                 </p>
