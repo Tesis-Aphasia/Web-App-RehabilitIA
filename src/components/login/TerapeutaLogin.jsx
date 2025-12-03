@@ -70,7 +70,7 @@ const TerapeutaLogin = () => {
 
             {/* Logo RehabilitIA */}
             <img
-              src="src/assets/brain_logo.png"
+              src="https://raw.githubusercontent.com/Tesis-Aphasia/Web-App-RehabilitIA/refs/heads/main/src/assets/brain_logo.png"
               alt="RehabilitIA"
               className="left-logo-rehab"
             />
@@ -83,7 +83,7 @@ const TerapeutaLogin = () => {
 
             {/* Logo Uniandes */}
             <div className="left-uniandes">
-              <img src="src/assets/logo_disc.png" alt="Uniandes" />
+              <img src="https://raw.githubusercontent.com/Tesis-Aphasia/Web-App-RehabilitIA/refs/heads/main/src/assets/logo_disc.png" alt="Uniandes" />
 
             </div>
           </div>

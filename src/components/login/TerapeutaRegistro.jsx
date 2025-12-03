@@ -59,7 +59,7 @@ const TerapeutaRegistro = () => {
 
             {/* Logo RehabilitIA */}
             <img
-              src="src/assets/brain_logo.png"
+              src="https://raw.githubusercontent.com/Tesis-Aphasia/Web-App-RehabilitIA/refs/heads/main/src/assets/brain_logo.png"
               alt="RehabilitIA"
               className="left-logo-rehab"
             />
@@ -72,7 +72,7 @@ const TerapeutaRegistro = () => {
 
             {/* Logo Uniandes */}
             <div className="left-uniandes">
-              <img src="src/assets/logo_disc.png" alt="Uniandes" />
+              <img src="https://raw.githubusercontent.com/Tesis-Aphasia/Web-App-RehabilitIA/refs/heads/main/src/assets/logo_disc.png" alt="Uniandes" />
 
             </div>
           </div>
@@ -179,7 +179,7 @@ const TerapeutaRegistro = () => {
 
                 <p className="small text-muted text-center mt-3">
                   ¿Ya tienes una cuenta?{" "}
-                  <a href="/terapeuta/login" className="forgot-link fw-semibold">
+                  <a href="/" className="forgot-link fw-semibold">
                     Inicia sesión
                   </a>
                 </p>
