@@ -18,12 +18,12 @@ const SRTable = ({ exercises, onEdit, onView }) => { // 👈 añadimos onView
       .filter((e) => e.terapia === "SR")
       .filter((e) => {
         if (filterEstado !== "Todos") {
-          if (filterEstado === "Aprobado" && !e.revisado) return false;
-          if (filterEstado === "Pendiente" && e.revisado) return false;
+          if (filterEstado === "Revisado" && !e.revisado) return false;
+          if (filterEstado === "Por Revisar" && e.revisado) return false;
         }
         if (
           filterIdPaciente &&
-          !e.id_paciente?.toString().includes(filterIdPaciente)
+          !e.pacienteEmail?.toString().includes(filterIdPaciente)
         )
           return false;
         return true;
@@ -46,17 +46,6 @@ const SRTable = ({ exercises, onEdit, onView }) => { // 👈 añadimos onView
       <div className="sr-table-container">
         {/* --- FILTROS --- */}
         <div className="filters-box flex-wrap align-items-center">
-          <div className="filter-group">
-            <label>Estado:</label>
-            <select
-              value={filterEstado}
-              onChange={(e) => setFilterEstado(e.target.value)}
-            >
-              <option>Todos</option>
-              <option>Aprobado</option>
-              <option>Pendiente</option>
-            </select>
-          </div>
 
           <div className="filter-group">
             <label>ID Paciente:</label>
@@ -67,6 +56,20 @@ const SRTable = ({ exercises, onEdit, onView }) => { // 👈 añadimos onView
               onChange={(e) => setFilterIdPaciente(e.target.value)}
             />
           </div>
+
+          <div className="filter-group">
+            <label>Revisado:</label>
+            <select
+              value={filterEstado}
+              onChange={(e) => setFilterEstado(e.target.value)}
+            >
+              <option>Todos</option>
+              <option>Revisado</option>
+              <option>Por Revisar</option>
+            </select>
+          </div>
+
+          
 
           <button
             className="btn btn-outline-danger mt-2 mt-md-0"

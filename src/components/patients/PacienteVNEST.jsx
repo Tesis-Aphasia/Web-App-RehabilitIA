@@ -98,13 +98,27 @@ const PacienteVnest = ({ exercises, onView }) => {
 
           <div className="filter-group">
             <label>Contexto:</label>
-            <input
-              type="text"
-              placeholder="Buscar contexto"
+            <select
               value={filterContexto}
               onChange={(e) => setFilterContexto(e.target.value)}
-            />
+            >
+              <option>Todos</option>
+              <option>Educación</option>
+              <option>Actividades domésticas</option>
+              <option>Trabajo</option>
+              <option>Deportes</option>
+              <option>Hacer mercado</option>
+              <option>Ir de compras</option>
+              <option>Ir a un restaurante</option>
+              <option>Festividades</option>
+              <option>Reunión social</option>
+              <option>Viajes</option>
+              <option>Servicios de transporte</option>
+              <option>Contexto libre</option>
+              <option>Cita médica</option>
+            </select>
           </div>
+
 
           <button
             className="btn btn-outline-danger mt-2 mt-md-0"

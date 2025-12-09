@@ -29,11 +29,11 @@ const VNESTTable = ({ exercises, onEdit, onView }) => {
     return exercises
       .filter((e) => e.terapia === "VNEST")
       .filter((e) => {
-        if (filterVisibilidad !== "Todos" && e.tipo !== filterVisibilidad)
+        if (filterVisibilidad.toLowerCase() !== "todos" && e.tipo !== filterVisibilidad.toLowerCase())
           return false;
         if (filterEstado !== "Todos") {
-          if (filterEstado === "Aprobado" && !e.revisado) return false;
-          if (filterEstado === "Pendiente" && e.revisado) return false;
+          if (filterEstado === "Revisado" && !e.revisado) return false;
+          if (filterEstado === "Por Revisar" && e.revisado) return false;
         }
         if (filterPersonalizado !== "Todos") {
           const isPersonalizado = !!e.personalizado;
@@ -52,7 +52,7 @@ const VNESTTable = ({ exercises, onEdit, onView }) => {
           return false;
         if (
           filterIdPaciente &&
-          !e.id_paciente?.toString().includes(filterIdPaciente)
+          !e.pacienteEmail?.toString().includes(filterIdPaciente)
         )
           return false;
 
@@ -114,21 +114,44 @@ const VNESTTable = ({ exercises, onEdit, onView }) => {
               onChange={(e) => setFilterVisibilidad(e.target.value)}
             >
               <option>Todos</option>
-              <option>publico</option>
-              <option>privado</option>
+              <option>Publico</option>
+              <option>Privado</option>
             </select>
           </div>
 
           <div className="filter-group">
-            <label>Estado:</label>
+            <label>Contexto:</label>
             <select
-              value={filterEstado}
-              onChange={(e) => setFilterEstado(e.target.value)}
+              value={filterContexto}
+              onChange={(e) => setFilterContexto(e.target.value)}
             >
               <option>Todos</option>
-              <option>Aprobado</option>
-              <option>Pendiente</option>
+              <option>Educación</option>
+              <option>Actividades domésticas</option>
+              <option>Trabajo</option>
+              <option>Deportes</option>
+              <option>Hacer mercado</option>
+              <option>Ir de compras</option>
+              <option>Ir a un restaurante</option>
+              <option>Festividades</option>
+              <option>Reunión social</option>
+              <option>Viajes</option>
+              <option>Servicios de transporte</option>
+              <option>Contexto libre</option>
+              <option>Cita médica</option>
             </select>
+          </div>
+
+          
+
+          <div className="filter-group">
+            <label>Verbo:</label>
+            <input
+              type="text"
+              placeholder="Buscar verbo"
+              value={filterVerbo}
+              onChange={(e) => setFilterVerbo(e.target.value)}
+            />
           </div>
 
           <div className="filter-group">
@@ -143,25 +166,7 @@ const VNESTTable = ({ exercises, onEdit, onView }) => {
             </select>
           </div>
 
-          <div className="filter-group">
-            <label>Verbo:</label>
-            <input
-              type="text"
-              placeholder="Buscar verbo"
-              value={filterVerbo}
-              onChange={(e) => setFilterVerbo(e.target.value)}
-            />
-          </div>
-
-          <div className="filter-group">
-            <label>Contexto:</label>
-            <input
-              type="text"
-              placeholder="Buscar contexto"
-              value={filterContexto}
-              onChange={(e) => setFilterContexto(e.target.value)}
-            />
-          </div>
+          
 
           <div className="filter-group">
             <label>ID Paciente:</label>
@@ -171,6 +176,18 @@ const VNESTTable = ({ exercises, onEdit, onView }) => {
               value={filterIdPaciente}
               onChange={(e) => setFilterIdPaciente(e.target.value)}
             />
+          </div>
+
+          <div className="filter-group">
+            <label>Revisado:</label>
+            <select
+              value={filterEstado}
+              onChange={(e) => setFilterEstado(e.target.value)}
+            >
+              <option>Todos</option>
+              <option>Revisado</option>
+              <option>Por Revisar</option>
+            </select>
           </div>
         
 

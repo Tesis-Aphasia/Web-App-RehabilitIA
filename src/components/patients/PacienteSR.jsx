@@ -21,8 +21,8 @@ const PacienteSR = ({ exercises, onView }) => {
       .filter((e) => e.terapia === "SR")
       .filter((e) => {
         if (filterEstado !== "Todos") {
-          if (filterEstado === "Completado" && !e.revisado) return false;
-          if (filterEstado === "Pendiente" && e.revisado) return false;
+          if (filterEstado === "Completado" && e.estado !== "completado") return false;
+          if (filterEstado === "Pendiente" && e.estado === "completado") return false;
         }
         if (filterPregunta && !e.pregunta?.toLowerCase().includes(filterPregunta.toLowerCase()))
           return false;
@@ -111,10 +111,10 @@ const PacienteSR = ({ exercises, onView }) => {
                   <td>{e.pregunta || "—"}</td>
                   <td>{e.rta_correcta || "—"}</td>
                   <td>
-                    {e.revisado ? (
-                      <span className="badge bg-success">Aprobado</span>
+                    {e.estado === "completado" ? (
+                      <span className="badge bg-success">Completado</span>
                     ) : (
-                      <span className="badge bg-warning text-dark">
+                      <span className="badge bg-secondary">
                         Pendiente
                       </span>
                     )}
