@@ -100,72 +100,91 @@ const SREditor = ({ open, onClose, exercise }) => {
             </div>
           ) : (
             <>
+              {/* === ESTADO DE REVISIÓN === */}
+              <section className="sr-section">
+                <div className="review-toggle-container">
+                  <div className="review-info">
+                    <h5 className="review-title">
+                      {form.revisado ? '✅ Ejercicio Revisado' : '⏳ Pendiente de Revisión'}
+                    </h5>
+                    <p className="review-description">
+                      {form.revisado 
+                        ? 'Este ejercicio ha sido revisado y está listo para usar'
+                        : 'Marca este ejercicio como revisado cuando hayas verificado su contenido'
+                      }
+                    </p>
+                  </div>
+                  <button
+                    className={`toggle-switch ${form.revisado ? 'active' : ''}`}
+                    onClick={() => setForm((p) => ({ ...p, revisado: !p.revisado }))}
+                    type="button"
+                    aria-label="Toggle revision status"
+                  >
+                    <span className="toggle-slider"></span>
+                    <span className="toggle-label">
+                      {form.revisado ? 'Revisado' : 'Pendiente'}
+                    </span>
+                  </button>
+                </div>
+              </section>
+
               {/* Información contextual */}
-              <div className="sr-info-box mb-4">
-                <p>
-                  <strong>ID:</strong> {exercise.id}
-                </p>
-                <p>
-                  <strong>Paciente:</strong> {exercise.id_paciente || "—"}
-                </p>
-                <p>
-                  <strong>Tipo:</strong> {exercise.tipo || "—"}
-                </p>
-              </div>
+              <section className="sr-section">
+                <h5 className="section-title">📊 Información del Ejercicio</h5>
+                <div className="sr-info-grid">
+                  <div className="info-item">
+                    <span className="info-label">ID:</span>
+                    <span className="info-value">{exercise.id}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Paciente:</span>
+                    <span className="info-value">{exercise.pacienteEmail || "—"}</span>
+                  </div>
+                  
+                </div>
+              </section>
 
               {/* Formulario principal */}
-              <div className="sr-form">
-                <div className="form-group">
-                  <label>Pregunta</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Escribe la pregunta del ejercicio"
-                    value={form.pregunta}
-                    onChange={(e) =>
-                      setForm((p) => ({ ...p, pregunta: e.target.value }))
-                    }
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Respuesta correcta</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Escribe la respuesta esperada"
-                    value={form.rta_correcta}
-                    onChange={(e) =>
-                      setForm((p) => ({
-                        ...p,
-                        rta_correcta: e.target.value,
-                      }))
-                    }
-                  />
-                </div>
-
-                <div className="form-check mb-3 mt-3">
-                  <input
-                    id="revisado"
-                    type="checkbox"
-                    className="form-check-input"
-                    checked={form.revisado}
-                    onChange={(e) =>
-                      setForm((p) => ({ ...p, revisado: e.target.checked }))
-                    }
-                  />
-                  <label htmlFor="revisado" className="form-check-label">
-                    Marcar como revisado
-                  </label>
-                </div>
-
-                {error && <div className="alert-danger mt-2">{error}</div>}
-                {success && (
-                  <div className="alert-success mt-2">
-                    <FaCheckCircle className="me-2" /> Guardado correctamente
+              <section className="sr-section">
+                <h5 className="section-title">📝 Contenido del Ejercicio</h5>
+                <div className="sr-form">
+                  <div className="form-group">
+                    <label>Pregunta</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Escribe la pregunta del ejercicio"
+                      value={form.pregunta}
+                      onChange={(e) =>
+                        setForm((p) => ({ ...p, pregunta: e.target.value }))
+                      }
+                    />
                   </div>
-                )}
-              </div>
+
+                  <div className="form-group">
+                    <label>Respuesta correcta</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Escribe la respuesta esperada"
+                      value={form.rta_correcta}
+                      onChange={(e) =>
+                        setForm((p) => ({
+                          ...p,
+                          rta_correcta: e.target.value,
+                        }))
+                      }
+                    />
+                  </div>
+
+                  {error && <div className="alert-danger mt-2">{error}</div>}
+                  {success && (
+                    <div className="alert-success mt-2">
+                      <FaCheckCircle className="me-2" /> Guardado correctamente
+                    </div>
+                  )}
+                </div>
+              </section>
             </>
           )}
         </div>

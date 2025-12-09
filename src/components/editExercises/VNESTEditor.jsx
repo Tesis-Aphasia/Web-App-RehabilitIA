@@ -5,7 +5,7 @@ import {
 } from "../../services/exercisesService";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../services/firebase";
-import { FaSave, FaTimes, FaCheckCircle } from "react-icons/fa";
+import { FaSave, FaTimes, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import "./VNESTEditor.css";
 
 const NIVELES = ["fácil", "medio", "difícil"];
@@ -122,8 +122,37 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
         ) : (
           <>
             <div className="vnest-body">
+              {/* === ESTADO DE REVISIÓN === */}
+              <section className="vnest-section">
+                <div className="review-toggle-container">
+                  <div className="review-info">
+                    <h5 className="review-title">
+                      {form.revisado ? '✅ Ejercicio Revisado' : '⏳ Pendiente de Revisión'}
+                    </h5>
+                    <p className="review-description">
+                      {form.revisado 
+                        ? 'Este ejercicio ha sido revisado y está listo para usar'
+                        : 'Marca este ejercicio como revisado cuando hayas verificado su contenido'
+                      }
+                    </p>
+                  </div>
+                  <button
+                    className={`toggle-switch ${form.revisado ? 'active' : ''}`}
+                    onClick={() => setForm({ ...form, revisado: !form.revisado })}
+                    type="button"
+                    aria-label="Toggle revision status"
+                  >
+                    <span className="toggle-slider"></span>
+                    <span className="toggle-label">
+                      {form.revisado ? 'Revisado' : 'Pendiente'}
+                    </span>
+                  </button>
+                </div>
+              </section>
+
               {/* === CAMPOS PRINCIPALES === */}
               <section className="vnest-section main-fields">
+                <h5 className="section-title">📝 Información Básica</h5>
                 <div className="row g-3">
                   <div className="col-md-4">
                     <label>Verbo</label>
@@ -162,26 +191,11 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
                     />
                   </div>
                 </div>
-
-                <div className="form-check mt-3">
-                  <input
-                    id="revisado"
-                    type="checkbox"
-                    className="form-check-input"
-                    checked={form.revisado}
-                    onChange={(e) =>
-                      setForm({ ...form, revisado: e.target.checked })
-                    }
-                  />
-                  <label htmlFor="revisado" className="form-check-label">
-                    Marcar como revisado
-                  </label>
-                </div>
               </section>
 
               {/* === BLOQUE DE PARES === */}
               <section className="vnest-section mt-4">
-                <h5 className="section-title">Pares Sujeto - Objeto</h5>
+                <h5 className="section-title">🔗 Pares Sujeto - Objeto</h5>
                 {form.pares.map((p, idx) => (
                   <div key={idx} className="pair-card">
                     <div className="pair-header">
@@ -235,25 +249,31 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
 
               {/* === BLOQUE DE ORACIONES === */}
               <section className="vnest-section mt-4">
-                <h5 className="section-title">Oraciones</h5>
-                {form.oraciones.map((o, i) => (
-                  <div key={i} className="sentence-row">
-                    <input
-                      type="checkbox"
-                      checked={o.correcta}
-                      onChange={(e) =>
-                        handleOracionChange(i, "correcta", e.target.checked)
-                      }
-                    />
-                    <input
-                      className="form-control"
-                      value={o.oracion}
-                      onChange={(e) =>
-                        handleOracionChange(i, "oracion", e.target.value)
-                      }
-                    />
-                  </div>
-                ))}
+                <h5 className="section-title">📄 Oraciones</h5>
+                <div className="sentences-grid">
+                  {form.oraciones.map((o, i) => (
+                    <div key={i} className={`sentence-card ${o.correcta ? 'correct' : 'incorrect'}`}>
+                      <div className="sentence-header">
+                        <span className="sentence-number">#{i + 1}</span>
+                        <button
+                          type="button"
+                          className={`correctness-badge ${o.correcta ? 'correct' : 'incorrect'}`}
+                          onClick={() => handleOracionChange(i, "correcta", !o.correcta)}
+                        >
+                          {o.correcta ? '✓ Correcta' : '✗ Incorrecta'}
+                        </button>
+                      </div>
+                      <input
+                        className="sentence-input"
+                        value={o.oracion}
+                        placeholder="Escribe la oración aquí..."
+                        onChange={(e) =>
+                          handleOracionChange(i, "oracion", e.target.value)
+                        }
+                      />
+                    </div>
+                  ))}
+                </div>
               </section>
 
               {error && <div className="alert alert-danger mt-3">{error}</div>}
