@@ -24,9 +24,9 @@ const SelectExerciseType = () => {
             <div className="icon-circle ia">
               <i className="bi bi-stars"></i>
             </div>
-            <h5>Generar con IA</h5>
+            <h5>Generar con IA (solo VNEST)</h5>
             <p>
-              Crea automáticamente un ejercicio basado en un verbo, contexto o nivel.
+              Crea automáticamente un ejercicio VNEST basado en un verbo, contexto o nivel.
             </p>
           </div>
 

@@ -52,9 +52,9 @@ const AddExerciseIA = () => {
       <Navbar active="nuevo-ejercicio" />
 
       <main className="add-exercise-page">
-        <h2 className="page-title">✨ Crear nuevo ejercicio con IA</h2>
+        <h2 className="page-title">✨ Crear nuevo ejercicio VNEST con IA</h2>
         <p className="page-subtitle">
-          Completa los campos para generar automáticamente un ejercicio VNeST adaptado.
+          Completa los campos para generar automáticamente un ejercicio de terapia VNEST adaptado.
         </p>
 
         <div className="form-card">

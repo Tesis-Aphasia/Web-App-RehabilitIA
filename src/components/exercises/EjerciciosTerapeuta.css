@@ -3,7 +3,7 @@
   --primary-dark: #c17d5e;
   --bg-light: #f9f9f9;
   --text-muted: #888;
-  --shadow-card: 0 8px 20px rgba(0,0,0,0.05);
+  --shadow-card: 0 8px 20px rgba(0, 0, 0, 0.05);
 }
 
 /* ---------- FILTROS SELECT E INPUT ---------- */
@@ -44,10 +44,12 @@
 
 
 /* ---------- TABS DE TERAPIA ---------- */
+
 .terapia-tabs {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .tab-btn {
@@ -68,7 +70,7 @@
 }
 
 .tab-btn:hover {
-  background: rgba(239,126,6,0.1);
+  background: rgba(239, 126, 6, 0.1);
 }
 
 /* ---------- TABLA ---------- */
@@ -97,7 +99,7 @@
 
 /* ID más opaco */
 .id-cell {
-  color: rgba(0,0,0,0.35);
+  color: rgba(0, 0, 0, 0.35);
   font-weight: 500;
 }
 
@@ -236,11 +238,11 @@
   padding: 0.25rem 0.5rem;
 }
 
-.modal-content > .mb-3 > strong {
+.modal-content>.mb-3>strong {
   color: var(--primary-dark);
 }
 
-.modal-content .mb-3 > p {
+.modal-content .mb-3>p {
   margin-top: 0.25rem;
 }
 
@@ -259,6 +261,7 @@
     opacity: 0;
     transform: translateY(-5%);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

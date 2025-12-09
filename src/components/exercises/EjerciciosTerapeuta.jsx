@@ -155,29 +155,34 @@ const EjerciciosTerapeuta = () => {
     <div className="page-container">
       <Navbar active="ejercicios" />
       <main className="container py-5 mt-5">
-        <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div className="mb-4">
           <h2 className="fw-bold text-dark mb-0">Gestión de Ejercicios</h2>
-          <button
-            onClick={handleGenerateNew}
-            className="btn btn-primary fw-semibold d-flex align-items-center gap-2"
-            disabled={!therapistId}
-          >
-            <i className="bi bi-plus-lg"></i> Nuevo ejercicio
-          </button>
         </div>
 
-        <div className="terapia-tabs mb-4">
-          {["VNEST", "SR"].map((terapia) => (
+        <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+          <div className="terapia-tabs">
+            {["VNEST", "SR"].map((terapia) => (
+              <button
+                key={terapia}
+                className={`tab-btn ${
+                  activeTerapia === terapia ? "active-tab" : ""
+                }`}
+                onClick={() => setActiveTerapia(terapia)}
+              >
+                {terapia}
+              </button>
+            ))}
+          </div>
+
+          {activeTerapia === "VNEST" && (
             <button
-              key={terapia}
-              className={`tab-btn ${
-                activeTerapia === terapia ? "active-tab" : ""
-              }`}
-              onClick={() => setActiveTerapia(terapia)}
+              onClick={handleGenerateNew}
+              className="btn btn-primary fw-semibold d-flex align-items-center"
+              disabled={!therapistId}
             >
-              {terapia}
+              <i className="bi bi-plus-lg"></i> Nuevo ejercicio VNEST
             </button>
-          ))}
+          )}
         </div>
 
         {activeTerapia === "VNEST" ? (
