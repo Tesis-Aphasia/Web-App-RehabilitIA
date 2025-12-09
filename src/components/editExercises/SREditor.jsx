@@ -140,8 +140,7 @@ const SREditor = ({ open, onClose, exercise }) => {
                     <span className="info-label">Paciente:</span>
                     <span className="info-value">{exercise.pacienteEmail || "—"}</span>
                   </div>
-                  
-                </div>
+                  </div>
               </section>
 
               {/* Formulario principal */}
