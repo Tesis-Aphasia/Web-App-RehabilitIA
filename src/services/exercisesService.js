@@ -120,20 +120,7 @@ export async function getExerciseById(id) {
   }
 }
 
-/**
- * 🔹 Eliminar un ejercicio y su versión extendida (opcional)
- */
-export async function deleteExercise(id, terapia) {
-  try {
-    await deleteDoc(doc(db, "ejercicios", id));
-    if (terapia === "VNEST")
-      await deleteDoc(doc(db, "ejercicios_VNEST", id));
-    else if (terapia === "SR")
-      await deleteDoc(doc(db, "ejercicios_SR", id));
 
-  } catch (err) {
-  }
-}
 
 /**
  * 🔹 Actualizar los campos generales del ejercicio
@@ -162,7 +149,7 @@ export async function updateExerciseSR(id, data) {
  */
 export async function generateExercise(payload) {
   try {
-    const res = await fetch("https://afasia.virtual.uniandes.edu.co/api/context/generate", {
+    const res = await fetch("http://127.0.0.1:8000/context/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -179,7 +166,7 @@ export async function generateExercise(payload) {
 
 export async function personalizeExercise(userId, exerciseId, profile, creado_por) {
   try {
-    const response = await fetch("https://afasia.virtual.uniandes.edu.co/api/personalize-exercise/", {
+    const response = await fetch("http://127.0.0.1:8000/personalize-exercise/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -202,4 +189,60 @@ export async function personalizeExercise(userId, exerciseId, profile, creado_po
   } catch (err) {
     throw err;
   }
+}
+
+
+export async function generateExerciseImages(exerciseId, terapia) {
+  try {
+    const res = await fetch("http://127.0.0.1:8000/images/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ exercise_id: exerciseId, terapia }),
+    });
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    throw err;
+  }
+}
+
+// Reemplaza la deleteExercise existente con esta versión que llama al backend:
+export async function deleteExerciseWithImages(exerciseId, terapia) {
+  try {
+    const res = await fetch(
+      `http://127.0.0.1:8000/exercises/${exerciseId}?terapia=${terapia}`,
+      { method: "DELETE" }
+    );
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    throw err;
+  }
+}
+
+
+export async function deleteExerciseImage(imageKey, exerciseId, terapia) {
+  const res = await fetch(
+    `http://127.0.0.1:8000/images/${imageKey}?exercise_id=${exerciseId}&terapia=${terapia}`,
+    { method: "DELETE" }
+  );
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+  return await res.json();
+}
+
+export async function approveExercise(exerciseId, terapia) {
+  try {
+    const ref = doc(db, "ejercicios", exerciseId);
+    await updateDoc(ref, { aprobado: true });
+    const col = terapia === "VNEST" ? "ejercicios_VNEST" : "ejercicios_SR";
+    const ref2 = doc(db, col, exerciseId);
+    await updateDoc(ref2, { aprobado: true });
+    return { ok: true };
+  } catch (err) {
+    throw err;
+  }
+}
+
+export async function deleteExercise(exerciseId, terapia) {
+  return deleteExerciseWithImages(exerciseId, terapia);
 }

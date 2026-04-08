@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import "./VNESTTable.css";
 
-const VNESTTable = ({ exercises, onEdit, onView }) => {
+const VNESTTable = ({ exercises, onEdit, onView, onReviewImages }) => {
   // --- ESTADO PARA FILTROS ---
   const [filterVisibilidad, setFilterVisibilidad] = useState("Todos");
   const [filterEstado, setFilterEstado] = useState("Todos");
@@ -212,6 +212,7 @@ const VNESTTable = ({ exercises, onEdit, onView }) => {
               <th>Personalizado</th>
               <th>Asignado a</th>
               <th>Revisado</th>
+              <th>Aprobado</th>
               <th className="text-end">Acción</th>
             </tr>
           </thead>
@@ -239,13 +240,28 @@ const VNESTTable = ({ exercises, onEdit, onView }) => {
                       </span>
                     )}
                   </td>
+                  <td>
+                    {e.aprobado === true ? (
+                      <span className="badge bg-success">Aprobado</span>
+                    ) : e.revisado ? (
+                      <span className="badge bg-warning text-dark">Por aprobar</span>
+                    ) : (
+                      <span className="badge bg-secondary">Sin revisar</span>
+                    )}
+                  </td>
                   <td className="text-end">
-                    <button
-                      className="btn btn-sm btn-primary me-2"
-                      onClick={() => onEdit(e)}
-                    >
-                      Revisar
+                    <button className="btn btn-sm btn-primary me-2" onClick={() => onEdit(e)}>
+                      {e.revisado ? "Revisión final" : "Revisar"}
                     </button>
+                    {e.revisado && (
+                    <button
+                      className="btn btn-sm btn-warning"
+                      onClick={() => onReviewImages(e)}
+                      style={{ background: "#f48a63", border: "none", color: "white" }}
+                    >
+                      Imágenes
+                    </button>
+                  )}
                     <button
                       className="btn btn-sm btn-secondary"
                       onClick={() => onView(e)}
