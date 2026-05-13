@@ -70,7 +70,6 @@ const inferTipo = (slot) => {
 //  Cada imagen solo se usa UNA vez (Set de usados).
 // ─────────────────────────────────────────────────────────────
 const matchImgsToOpciones = (imagenes, slots, opciones) => {
-  // Recopilar imágenes disponibles en los slots dados
   const disponibles = slots
     .map(s => imagenes[s] ? { slot: s, img: imagenes[s] } : null)
     .filter(Boolean);
@@ -78,22 +77,15 @@ const matchImgsToOpciones = (imagenes, slots, opciones) => {
   const usados = new Set();
 
   return opciones.map((op) => {
-    // Palabras significativas de la opción (más de 3 letras)
     const opWords = op.toLowerCase().split(/\s+/).filter(w => w.length > 3);
 
-    // Buscar match semántico estricto: la word de la imagen debe
-    // aparecer dentro de la opción O viceversa (palabra clave)
     const match = disponibles.find(({ slot, img }) => {
       if (usados.has(slot)) return false;
       const imgWord = img.word.toLowerCase();
       const imgWords = imgWord.split(/\s+/).filter(w => w.length > 3);
-      // La opción contiene la palabra de la imagen
       const opContainsImg = op.toLowerCase().includes(imgWord);
-      // Alguna palabra clave de la imagen está en la opción
       const imgWordInOp = imgWords.some(w => op.toLowerCase().includes(w));
-      // Alguna palabra clave de la opción está en la imagen
       const opWordInImg = opWords.some(w => imgWord.includes(w));
-
       return opContainsImg || imgWordInOp || opWordInImg;
     });
 
@@ -102,7 +94,6 @@ const matchImgsToOpciones = (imagenes, slots, opciones) => {
       return { op, img: match.img, slot: match.slot };
     }
 
-    // Sin match semántico → no mostrar imagen (null)
     return { op, img: null, slot: null };
   });
 };
@@ -316,11 +307,9 @@ const ImageCard = ({ img, slot, word, yaAprobado, deletingKey, onDelete, onGener
         <img src={img.url} alt={img.word} onClick={() => onPreview(img)}
           style={{ width: "56px", height: "56px", objectFit: "contain", borderRadius: "8px", background: "#fff", padding: "4px", cursor: "pointer" }} />
         <div style={{ flex: 1 }}>
-          {/* Siempre muestra la opción de texto como título principal */}
           <div style={{ fontSize: "13px", fontWeight: 700, color: "#333" }}>
             {word || img.word}
           </div>
-          {/* Subtítulo solo si la imagen representa una palabra diferente a la opción */}
           {word && word !== img.word && (
             <div style={{ fontSize: "11px", color: "#aaa", marginTop: "2px" }}>
               imagen: {img.word}
@@ -336,7 +325,6 @@ const ImageCard = ({ img, slot, word, yaAprobado, deletingKey, onDelete, onGener
       </div>
     );
   }
-  // Sin imagen
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "12px", background: "#fafafa", borderRadius: "10px", padding: "8px 12px", border: "1px dashed #ddd" }}>
       <div style={{ width: "56px", height: "56px", borderRadius: "8px", background: "#f0f0f0", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -376,27 +364,26 @@ const Collapsible = ({ title, defaultOpen = false, children, accent = "#f48a63" 
 
 // ─────────────────────────────────────────────────────────────
 //  Helper: renderiza incorrectas de cuando/por_que
-//  con matching semántico estricto y sin repetición
+//  FIX: slots ahora empiezan en _1 (no en sin-número/_2)
+//       slotParaGenerar usa siempre _${j+1}
 // ─────────────────────────────────────────────────────────────
 const IncorrectasSection = ({ imagenes, parIdx, pregunta, opciones, opcionCorrecta, cardProps }) => {
   const incorrectas = opciones?.filter(op => op !== opcionCorrecta) || [];
 
-  const slots = [
-    `pares_${parIdx}_${pregunta}_incorrecta`,
-    ...Array.from({ length: 5 }, (_, k) => `pares_${parIdx}_${pregunta}_incorrecta_${k + 2}`),
-  ];
+  // ✅ FIX: antes generaba _incorrecta (sin número) y luego _2, _3...
+  //         En Firestore los slots son _incorrecta_1, _incorrecta_2, etc.
+  const slots = Array.from({ length: 6 }, (_, k) =>
+    `pares_${parIdx}_${pregunta}_incorrecta_${k + 1}`
+  );
 
-  // Matching estricto: sin match semántico → img null (muestra "Sin imagen" + botón Generar)
   const asignadas = matchImgsToOpciones(imagenes, slots, incorrectas);
 
   return (
     <div style={{ marginTop: "4px" }}>
       <div style={{ fontSize: "11px", color: "#ccc", marginBottom: "2px" }}>Otras opciones:</div>
       {asignadas.map(({ op, img, slot }, j) => {
-        // Si no hubo match, construimos el slot secuencial para el botón Generar
-        const slotParaGenerar = slot || (j === 0
-          ? `pares_${parIdx}_${pregunta}_incorrecta`
-          : `pares_${parIdx}_${pregunta}_incorrecta_${j + 1}`);
+        // ✅ FIX: siempre _${j+1}, nunca el caso especial sin número
+        const slotParaGenerar = slot || `pares_${parIdx}_${pregunta}_incorrecta_${j + 1}`;
         return (
           <div key={j}>
             <ImageCard
@@ -743,7 +730,7 @@ const VNESTImageReviewModal = ({ open, onClose, exercise }) => {
                                   </Collapsible>
                                 )}
 
-                                {/* CUÁNDO — matching semántico estricto, sin repetición */}
+                                {/* CUÁNDO */}
                                 {exp.cuando && (
                                   <Collapsible title={`⏰ Cuándo — correcta: "${exp.cuando.opcion_correcta}"`} accent="#888">
                                     <div>
@@ -761,7 +748,7 @@ const VNESTImageReviewModal = ({ open, onClose, exercise }) => {
                                   </Collapsible>
                                 )}
 
-                                {/* POR QUÉ — matching semántico estricto, sin repetición */}
+                                {/* POR QUÉ */}
                                 {exp.por_que && (
                                   <Collapsible title={`💡 Por qué — correcta: "${exp.por_que.opcion_correcta}"`} accent="#888">
                                     <div>
