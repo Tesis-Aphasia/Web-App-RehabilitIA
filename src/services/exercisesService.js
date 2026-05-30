@@ -149,7 +149,7 @@ export async function updateExerciseSR(id, data) {
  */
 export async function generateExercise(payload) {
   try {
-    const res = await fetch("http://127.0.0.1:8000/context/generate", {
+    const res = await fetch("https://afasia.virtual.uniandes.edu.co/api/context/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -166,7 +166,7 @@ export async function generateExercise(payload) {
 
 export async function personalizeExercise(userId, exerciseId, profile, creado_por) {
   try {
-    const response = await fetch("http://127.0.0.1:8000/personalize-exercise/", {
+    const response = await fetch("https://afasia.virtual.uniandes.edu.co/api/personalize-exercise/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -194,7 +194,7 @@ export async function personalizeExercise(userId, exerciseId, profile, creado_po
 
 export async function generateExerciseImages(exerciseId, terapia) {
   try {
-    const res = await fetch("http://127.0.0.1:8000/images/generate", {
+    const res = await fetch("https://afasia.virtual.uniandes.edu.co/api/images/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ exercise_id: exerciseId, terapia }),
@@ -210,8 +210,8 @@ export async function generateExerciseImages(exerciseId, terapia) {
 export async function deleteExerciseWithImages(exerciseId, terapia) {
   try {
     const res = await fetch(
-      `http://127.0.0.1:8000/exercises/${exerciseId}?terapia=${terapia}`,
-      { method: "DELETE" }
+      `https://afasia.virtual.uniandes.edu.co/api/exercises/${exerciseId}/delete?terapia=${terapia}`,
+      { method: "POST" }
     );
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     return await res.json();
@@ -223,8 +223,8 @@ export async function deleteExerciseWithImages(exerciseId, terapia) {
 
 export async function deleteExerciseImage(imageKey, exerciseId, terapia) {
   const res = await fetch(
-    `http://127.0.0.1:8000/images/${imageKey}?exercise_id=${exerciseId}&terapia=${terapia}`,
-    { method: "DELETE" }
+    `https://afasia.virtual.uniandes.edu.co/api/images/${imageKey}/delete?exercise_id=${exerciseId}&terapia=${terapia}`,
+    { method: "POST" }
   );
   if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
   return await res.json();

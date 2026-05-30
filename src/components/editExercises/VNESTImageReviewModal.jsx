@@ -17,7 +17,7 @@ import {
   FaCheckCircle, FaTimesCircle,
 } from "react-icons/fa";
 
-const BASE_URL = "http://localhost:8000";
+const BASE_URL = "https://afasia.virtual.uniandes.edu.co/api";
 
 // ─────────────────────────────────────────────────────────────
 //  Feedback VNEST — Firestore
