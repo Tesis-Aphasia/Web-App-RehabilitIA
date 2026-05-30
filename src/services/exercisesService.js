@@ -194,11 +194,17 @@ export async function personalizeExercise(userId, exerciseId, profile, creado_po
 
 export async function generateExerciseImages(exerciseId, terapia) {
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 300000); // 5 minutos
+    
     const res = await fetch("https://afasia.virtual.uniandes.edu.co/api/images/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ exercise_id: exerciseId, terapia }),
+      signal: controller.signal,
     });
+    
+    clearTimeout(timeoutId);
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     return await res.json();
   } catch (err) {
