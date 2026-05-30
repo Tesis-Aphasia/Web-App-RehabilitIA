@@ -340,15 +340,36 @@ const Collapsible = ({ title, defaultOpen = false, children, accent = "#f48a63" 
 const IncorrectasSection = ({ imagenes, parIdx, pregunta, opciones, opcionCorrecta, cardProps }) => {
   const incorrectas = opciones?.filter(op => op !== opcionCorrecta) || [];
 
+  // Construir mapa: word normalizada → {slot, img}
+  const slotToImg = {};
+  Object.entries(imagenes || {}).forEach(([slot, img]) => {
+    if (slot.startsWith(`pares_${parIdx}_${pregunta}_incorrecta_`)) {
+      slotToImg[slot] = img;
+    }
+  });
+
+  // Para cada opción, buscar imagen cuya word esté contenida en la opción o viceversa
+  const findImg = (op) => {
+    const opLower = op.toLowerCase();
+    for (const [slot, img] of Object.entries(slotToImg)) {
+      const wordLower = (img.word || "").toLowerCase();
+      if (opLower.includes(wordLower) || wordLower.includes(opLower)) {
+        return { slot, img };
+      }
+    }
+    return null;
+  };
+
   return (
     <div style={{ marginTop: "4px" }}>
       <div style={{ fontSize: "11px", color: "#ccc", marginBottom: "2px" }}>Otras opciones:</div>
       {incorrectas.map((op, j) => {
-        const slot = `pares_${parIdx}_${pregunta}_incorrecta_${j + 1}`;
+        const match = findImg(op);
+        const slot = match?.slot || `pares_${parIdx}_${pregunta}_incorrecta_${j + 1}`;
         return (
           <div key={j}>
             <ImageCard
-              img={imagenes?.[slot] || null}
+              img={match?.img || null}
               slot={slot}
               word={op}
               {...cardProps}
