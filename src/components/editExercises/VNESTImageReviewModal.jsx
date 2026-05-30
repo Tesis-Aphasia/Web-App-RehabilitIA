@@ -4,6 +4,7 @@ import {
   deleteExerciseImage,
   approveExercise,
   generateExerciseImages,
+  regenerateExerciseImages,
   deleteExercise,
 } from "../../services/exercisesService";
 import {
@@ -18,6 +19,8 @@ import {
 } from "react-icons/fa";
 
 const BASE_URL = "https://afasia.virtual.uniandes.edu.co/api";
+
+
 
 // ─────────────────────────────────────────────────────────────
 //  Feedback VNEST — Firestore
@@ -64,39 +67,8 @@ const inferTipo = (slot) => {
   return "objeto";
 };
 
-// ─────────────────────────────────────────────────────────────
-//  Matching semántico estricto: solo asigna imagen si hay
-//  coincidencia real de palabras. Sin match → null (sin imagen).
-//  Cada imagen solo se usa UNA vez (Set de usados).
-// ─────────────────────────────────────────────────────────────
-const matchImgsToOpciones = (imagenes, slots, opciones) => {
-  const disponibles = slots
-    .map(s => imagenes[s] ? { slot: s, img: imagenes[s] } : null)
-    .filter(Boolean);
 
-  const usados = new Set();
 
-  return opciones.map((op) => {
-    const opWords = op.toLowerCase().split(/\s+/).filter(w => w.length > 3);
-
-    const match = disponibles.find(({ slot, img }) => {
-      if (usados.has(slot)) return false;
-      const imgWord = img.word.toLowerCase();
-      const imgWords = imgWord.split(/\s+/).filter(w => w.length > 3);
-      const opContainsImg = op.toLowerCase().includes(imgWord);
-      const imgWordInOp = imgWords.some(w => op.toLowerCase().includes(w));
-      const opWordInImg = opWords.some(w => imgWord.includes(w));
-      return opContainsImg || imgWordInOp || opWordInImg;
-    });
-
-    if (match) {
-      usados.add(match.slot);
-      return { op, img: match.img, slot: match.slot };
-    }
-
-    return { op, img: null, slot: null };
-  });
-};
 
 // ─────────────────────────────────────────────────────────────
 //  Opciones de feedback
@@ -363,32 +335,21 @@ const Collapsible = ({ title, defaultOpen = false, children, accent = "#f48a63" 
 };
 
 // ─────────────────────────────────────────────────────────────
-//  Helper: renderiza incorrectas de cuando/por_que
-//  FIX: slots ahora empiezan en _1 (no en sin-número/_2)
-//       slotParaGenerar usa siempre _${j+1}
+//  IncorrectasSection — mapeo directo por índice (_incorrecta_1, _2, ...)
 // ─────────────────────────────────────────────────────────────
 const IncorrectasSection = ({ imagenes, parIdx, pregunta, opciones, opcionCorrecta, cardProps }) => {
   const incorrectas = opciones?.filter(op => op !== opcionCorrecta) || [];
 
-  // ✅ FIX: antes generaba _incorrecta (sin número) y luego _2, _3...
-  //         En Firestore los slots son _incorrecta_1, _incorrecta_2, etc.
-  const slots = Array.from({ length: 6 }, (_, k) =>
-    `pares_${parIdx}_${pregunta}_incorrecta_${k + 1}`
-  );
-
-  const asignadas = matchImgsToOpciones(imagenes, slots, incorrectas);
-
   return (
     <div style={{ marginTop: "4px" }}>
       <div style={{ fontSize: "11px", color: "#ccc", marginBottom: "2px" }}>Otras opciones:</div>
-      {asignadas.map(({ op, img, slot }, j) => {
-        // ✅ FIX: siempre _${j+1}, nunca el caso especial sin número
-        const slotParaGenerar = slot || `pares_${parIdx}_${pregunta}_incorrecta_${j + 1}`;
+      {incorrectas.map((op, j) => {
+        const slot = `pares_${parIdx}_${pregunta}_incorrecta_${j + 1}`;
         return (
           <div key={j}>
             <ImageCard
-              img={img}
-              slot={slotParaGenerar}
+              img={imagenes?.[slot] || null}
+              slot={slot}
               word={op}
               {...cardProps}
             />
@@ -500,6 +461,29 @@ const VNESTImageReviewModal = ({ open, onClose, exercise }) => {
       setGenerating(false);
     }
   };
+
+  const handleRegenerateAll = async () => {
+    if (yaAprobado) return;
+    setGenerating(true); setError(""); setSuccess("");
+    try {
+      const result = await regenerateExerciseImages(exercise.id, "VNEST");
+      if (result.ok) {
+        setImagenes(result.imagenes || {});
+        setDeletedImages([]);
+        clearDeletedImages(exercise.id);
+        clearPendingFeedback(exercise.id);
+        setSuccess(`✅ ${result.con_imagen} imágenes regeneradas`);
+        setTimeout(() => setSuccess(""), 4000);
+      } else {
+        setError(result.error || "Error al regenerar imágenes.");
+      }
+    } catch {
+      setError("Error de conexión. Verifica que el servidor esté activo.");
+    } finally {
+      setGenerating(false);
+    }
+  };
+
 
   const handleGenerateSingle = async (slot, word) => {
     setGeneratingSlot(slot); setError("");
@@ -677,7 +661,7 @@ const VNESTImageReviewModal = ({ open, onClose, exercise }) => {
 
                 {hayImagenes && (
                   <>
-                    <div style={{ display: "flex", alignItems: "center", marginBottom: "14px" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "14px" }}>
                       <span style={{ fontSize: "13px", color: "#888" }}>
                         {totalImagenes} imagen{totalImagenes !== 1 ? "es" : ""} generada{totalImagenes !== 1 ? "s" : ""}
                         {deletedImages.length > 0 && (
@@ -686,6 +670,12 @@ const VNESTImageReviewModal = ({ open, onClose, exercise }) => {
                           </span>
                         )}
                       </span>
+                      {!yaAprobado && (
+                        <button onClick={handleRegenerateAll} disabled={generating}
+                          style={{ background: generating ? "#ccc" : "#6c757d", border: "none", color: "white", borderRadius: "8px", padding: "5px 12px", fontSize: "12px", fontWeight: 600, cursor: generating ? "not-allowed" : "pointer" }}>
+                          {generating ? "Regenerando..." : "🔄 Regenerar todo"}
+                        </button>
+                      )}
                     </div>
 
                     {/* VERBO */}

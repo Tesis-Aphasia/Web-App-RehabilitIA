@@ -243,6 +243,16 @@ export async function approveExercise(exerciseId, terapia) {
   }
 }
 
+export async function regenerateExerciseImages(exerciseId, terapia) {
+  const res = await fetch("https://afasia.virtual.uniandes.edu.co/api/images/regenerate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ exercise_id: exerciseId, terapia }),
+  });
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+  return await res.json();
+}
+
 export async function deleteExercise(exerciseId, terapia) {
   return deleteExerciseWithImages(exerciseId, terapia);
 }
