@@ -193,23 +193,26 @@ export async function personalizeExercise(userId, exerciseId, profile, creado_po
 
 
 export async function generateExerciseImages(exerciseId, terapia) {
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1200000); // 20 minutos
-    
-    const res = await fetch("https://afasia.virtual.uniandes.edu.co/api/images/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ exercise_id: exerciseId, terapia }),
-      signal: controller.signal,
-    });
-    
-    clearTimeout(timeoutId);
-    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-    return await res.json();
-  } catch (err) {
-    throw err;
+  // Lanza el job
+  const res = await fetch("https://afasia.virtual.uniandes.edu.co/api/images/generate-async", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ exercise_id: exerciseId, terapia }),
+  });
+  const { job_id } = await res.json();
+
+  // Polling cada 5 segundos hasta 20 minutos
+  const maxAttempts = 240;
+  for (let i = 0; i < maxAttempts; i++) {
+    await new Promise(r => setTimeout(r, 5000));
+    const statusRes = await fetch(
+      `https://afasia.virtual.uniandes.edu.co/api/images/status/${job_id}`
+    );
+    const status = await statusRes.json();
+    if (status.status === "done") return status.result;
+    if (status.status === "error") throw new Error(status.error);
   }
+  throw new Error("Timeout esperando imágenes");
 }
 
 // Reemplaza la deleteExercise existente con esta versión que llama al backend:
