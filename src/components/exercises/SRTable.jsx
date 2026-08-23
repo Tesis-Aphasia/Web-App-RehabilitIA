@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import "./SRTable.css";
 
-const SRTable = ({ exercises, onEdit, onView }) => { // 👈 añadimos onView
+const SRTable = ({ exercises, onEdit, onView ,onReviewImages}) => { // 👈 añadimos onView
   const [filterEstado, setFilterEstado] = useState("Todos");
   const [filterIdPaciente, setFilterIdPaciente] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -90,6 +90,7 @@ const SRTable = ({ exercises, onEdit, onView }) => { // 👈 añadimos onView
                 <th>Pregunta</th>
                 <th>Respuesta</th>
                 <th>Revisado</th>
+                <th>Aprobado</th>
                 <th className="text-end">Acción</th>
               </tr>
             </thead>
@@ -116,20 +117,39 @@ const SRTable = ({ exercises, onEdit, onView }) => { // 👈 añadimos onView
                         </span>
                       )}
                     </td>
-                    <td className="text-end d-flex justify-content-end gap-2">
-                      
+                    <td>
+                      {e.aprobado === true ? (
+                        <span className="badge bg-success">Aprobado</span>
+                      ) : e.revisado ? (
+                        <span className="badge bg-warning text-dark">Por aprobar</span>
+                      ) : (
+                        <span className="badge bg-secondary">Sin revisar</span>
+                      )}
+                    </td>
+                    <td className="text-end" style={{ whiteSpace: "nowrap" }}>
+                      <div className="d-flex justify-content-end gap-2">
                       <button
                         className="btn btn-sm btn-primary"
                         onClick={() => onEdit(e)}
                       >
-                        Revisar
+                        {e.revisado ? "Revisión final" : "Revisar"}
                       </button>
+                      {e.revisado && (
+                      <button
+                        className="btn btn-sm btn-warning"
+                        onClick={() => onReviewImages(e)}
+                        style={{ background: "#f48a63", border: "none", color: "white" }}
+                      >
+                        Imágenes
+                      </button>
+                    )}
                       <button
                         className="btn btn-sm btn-secondary"
                         onClick={() => onView(e)} // 👈 botón VER
                       >
                         Ver
                       </button>
+                      </div>
                     </td>
                   </tr>
                 ))

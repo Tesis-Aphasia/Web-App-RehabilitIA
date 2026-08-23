@@ -120,20 +120,7 @@ export async function getExerciseById(id) {
   }
 }
 
-/**
- * 🔹 Eliminar un ejercicio y su versión extendida (opcional)
- */
-export async function deleteExercise(id, terapia) {
-  try {
-    await deleteDoc(doc(db, "ejercicios", id));
-    if (terapia === "VNEST")
-      await deleteDoc(doc(db, "ejercicios_VNEST", id));
-    else if (terapia === "SR")
-      await deleteDoc(doc(db, "ejercicios_SR", id));
 
-  } catch (err) {
-  }
-}
 
 /**
  * 🔹 Actualizar los campos generales del ejercicio
@@ -202,4 +189,79 @@ export async function personalizeExercise(userId, exerciseId, profile, creado_po
   } catch (err) {
     throw err;
   }
+}
+
+
+export async function generateExerciseImages(exerciseId, terapia) {
+  // Lanza el job
+  const res = await fetch("https://afasia.virtual.uniandes.edu.co/api/images/generate-async", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ exercise_id: exerciseId, terapia }),
+  });
+  const { job_id } = await res.json();
+
+  // Polling cada 5 segundos hasta 20 minutos
+  const maxAttempts = 240;
+  for (let i = 0; i < maxAttempts; i++) {
+    await new Promise(r => setTimeout(r, 5000));
+    const statusRes = await fetch(
+      `https://afasia.virtual.uniandes.edu.co/api/images/status/${job_id}`
+    );
+    const status = await statusRes.json();
+    if (status.status === "done") return status.result;
+    if (status.status === "error") throw new Error(status.error);
+  }
+  throw new Error("Timeout esperando imágenes");
+}
+
+// Reemplaza la deleteExercise existente con esta versión que llama al backend:
+export async function deleteExerciseWithImages(exerciseId, terapia) {
+  try {
+    const res = await fetch(
+      `https://afasia.virtual.uniandes.edu.co/api/exercises/${exerciseId}/delete?terapia=${terapia}`,
+      { method: "POST" }
+    );
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    throw err;
+  }
+}
+
+
+export async function deleteExerciseImage(imageKey, exerciseId, terapia) {
+  const res = await fetch(
+    `https://afasia.virtual.uniandes.edu.co/api/images/${imageKey}/delete?exercise_id=${exerciseId}&terapia=${terapia}`,
+    { method: "POST" }
+  );
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+  return await res.json();
+}
+
+export async function approveExercise(exerciseId, terapia) {
+  try {
+    const ref = doc(db, "ejercicios", exerciseId);
+    await updateDoc(ref, { aprobado: true });
+    const col = terapia === "VNEST" ? "ejercicios_VNEST" : "ejercicios_SR";
+    const ref2 = doc(db, col, exerciseId);
+    await updateDoc(ref2, { aprobado: true });
+    return { ok: true };
+  } catch (err) {
+    throw err;
+  }
+}
+
+export async function regenerateExerciseImages(exerciseId, terapia) {
+  const res = await fetch("https://afasia.virtual.uniandes.edu.co/api/images/regenerate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ exercise_id: exerciseId, terapia }),
+  });
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+  return await res.json();
+}
+
+export async function deleteExercise(exerciseId, terapia) {
+  return deleteExerciseWithImages(exerciseId, terapia);
 }

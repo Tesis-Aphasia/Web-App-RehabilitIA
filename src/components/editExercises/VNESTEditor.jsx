@@ -5,7 +5,7 @@ import {
 } from "../../services/exercisesService";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../services/firebase";
-import { FaSave, FaTimes, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
+import { FaSave, FaTimes, FaCheckCircle, FaLock } from "react-icons/fa";
 import "./VNESTEditor.css";
 
 const NIVELES = ["fácil", "medio", "difícil"];
@@ -16,8 +16,8 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [yaRevisado, setYaRevisado] = useState(false); // 🔒 bloqueado si ya estaba revisado
 
-  // === Cargar detalles del ejercicio ===
   useEffect(() => {
     if (!exercise) return;
     const load = async () => {
@@ -27,11 +27,14 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
         const extra =
           Array.isArray(data) && data.length > 0 ? data[0] : data || {};
 
+        const revisadoOriginal = Boolean(exercise.revisado);
+        setYaRevisado(revisadoOriginal); // 🔒 guarda estado original
+
         setForm({
           verbo: extra.verbo || "",
           nivel: extra.nivel || "fácil",
           contexto: extra.contexto || "",
-          revisado: Boolean(exercise.revisado),
+          revisado: revisadoOriginal,
           pares: extra.pares || [],
           oraciones: extra.oraciones || [],
         });
@@ -44,8 +47,8 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
     load();
   }, [exercise]);
 
-  // === Handlers ===
   const handleParChange = (idx, key, value) => {
+    if (yaRevisado) return;
     setForm((prev) => {
       const pares = [...prev.pares];
       pares[idx][key] = value;
@@ -54,6 +57,7 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
   };
 
   const handleExpChange = (idx, grupo, i, val) => {
+    if (yaRevisado) return;
     setForm((prev) => {
       const pares = [...prev.pares];
       pares[idx].expansiones[grupo].opciones[i] = val;
@@ -62,6 +66,7 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
   };
 
   const handleOracionChange = (idx, key, val) => {
+    if (yaRevisado) return;
     setForm((prev) => {
       const oraciones = [...prev.oraciones];
       oraciones[idx][key] = val;
@@ -69,9 +74,8 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
     });
   };
 
-  // === Guardar ===
   const handleSave = async () => {
-    if (!exercise || !form) return;
+    if (!exercise || !form || yaRevisado) return; // 🔒 no guarda si ya estaba revisado
     setSaving(true);
     setError("");
     setSuccess(false);
@@ -115,13 +119,31 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
         {loading || !form ? (
           <div className="vnest-loading">
             <div className="spinner-border" role="status"></div>
-            <p className="mt-3 fw-semibold text-muted">
-              Cargando datos del ejercicio...
-            </p>
+            <p className="mt-3 fw-semibold text-muted">Cargando datos del ejercicio...</p>
           </div>
         ) : (
           <>
             <div className="vnest-body">
+
+              {/* 🔒 BANNER BLOQUEADO */}
+              {yaRevisado && (
+                <div style={{
+                  background: "#f0fdf4",
+                  border: "1px solid #86efac",
+                  borderRadius: "10px",
+                  padding: "12px 16px",
+                  marginBottom: "16px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  fontSize: "14px",
+                  color: "#166534",
+                }}>
+                  <FaLock size={14} />
+                  Este ejercicio ya fue revisado y no puede modificarse.
+                </div>
+              )}
+
               {/* === ESTADO DE REVISIÓN === */}
               <section className="vnest-section">
                 <div className="review-toggle-container">
@@ -130,17 +152,24 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
                       {form.revisado ? '✅ Ejercicio Revisado' : '⏳ Pendiente de Revisión'}
                     </h5>
                     <p className="review-description">
-                      {form.revisado 
+                      {form.revisado
                         ? 'Este ejercicio ha sido revisado y está listo para usar'
-                        : 'Marca este ejercicio como revisado cuando hayas verificado su contenido'
-                      }
+                        : 'Marca este ejercicio como revisado cuando hayas verificado su contenido'}
                     </p>
                   </div>
+                  {/* 🔒 Toggle deshabilitado si ya estaba revisado */}
                   <button
                     className={`toggle-switch ${form.revisado ? 'active' : ''}`}
-                    onClick={() => setForm({ ...form, revisado: !form.revisado })}
+                    onClick={() => {
+                      if (yaRevisado) return;
+                      setForm({ ...form, revisado: !form.revisado });
+                    }}
                     type="button"
-                    aria-label="Toggle revision status"
+                    disabled={yaRevisado}
+                    style={{
+                      opacity: yaRevisado ? 0.6 : 1,
+                      cursor: yaRevisado ? 'not-allowed' : 'pointer',
+                    }}
                   >
                     <span className="toggle-slider"></span>
                     <span className="toggle-label">
@@ -159,19 +188,22 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
                     <input
                       className="form-control"
                       value={form.verbo}
+                      disabled={yaRevisado}
+                      style={{ cursor: yaRevisado ? 'not-allowed' : 'text' }}
                       onChange={(e) =>
-                        setForm({ ...form, verbo: e.target.value })
+                        !yaRevisado && setForm({ ...form, verbo: e.target.value })
                       }
                     />
                   </div>
-
                   <div className="col-md-4">
                     <label>Nivel</label>
                     <select
                       className="form-select"
                       value={form.nivel}
+                      disabled={yaRevisado}
+                      style={{ cursor: yaRevisado ? 'not-allowed' : 'pointer' }}
                       onChange={(e) =>
-                        setForm({ ...form, nivel: e.target.value })
+                        !yaRevisado && setForm({ ...form, nivel: e.target.value })
                       }
                     >
                       {NIVELES.map((n) => (
@@ -179,14 +211,15 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
                       ))}
                     </select>
                   </div>
-
                   <div className="col-md-4">
                     <label>Contexto</label>
                     <input
                       className="form-control"
                       value={form.contexto}
+                      disabled={yaRevisado}
+                      style={{ cursor: yaRevisado ? 'not-allowed' : 'text' }}
                       onChange={(e) =>
-                        setForm({ ...form, contexto: e.target.value })
+                        !yaRevisado && setForm({ ...form, contexto: e.target.value })
                       }
                     />
                   </div>
@@ -207,9 +240,9 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
                         <input
                           className="form-control"
                           value={p.sujeto}
-                          onChange={(e) =>
-                            handleParChange(idx, "sujeto", e.target.value)
-                          }
+                          disabled={yaRevisado}
+                          style={{ cursor: yaRevisado ? 'not-allowed' : 'text' }}
+                          onChange={(e) => handleParChange(idx, "sujeto", e.target.value)}
                         />
                       </div>
                       <div className="col-md-6">
@@ -217,9 +250,9 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
                         <input
                           className="form-control"
                           value={p.objeto}
-                          onChange={(e) =>
-                            handleParChange(idx, "objeto", e.target.value)
-                          }
+                          disabled={yaRevisado}
+                          style={{ cursor: yaRevisado ? 'not-allowed' : 'text' }}
+                          onChange={(e) => handleParChange(idx, "objeto", e.target.value)}
                         />
                       </div>
                     </div>
@@ -232,14 +265,13 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
                             key={i}
                             className="form-control mb-1"
                             value={opt}
-                            onChange={(e) =>
-                              handleExpChange(idx, k, i, e.target.value)
-                            }
+                            disabled={yaRevisado}
+                            style={{ cursor: yaRevisado ? 'not-allowed' : 'text' }}
+                            onChange={(e) => handleExpChange(idx, k, i, e.target.value)}
                           />
                         ))}
                         <small className="text-muted">
-                          Correcta:{" "}
-                          <strong>{p.expansiones?.[k]?.opcion_correcta}</strong>
+                          Correcta: <strong>{p.expansiones?.[k]?.opcion_correcta}</strong>
                         </small>
                       </div>
                     ))}
@@ -258,6 +290,8 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
                         <button
                           type="button"
                           className={`correctness-badge ${o.correcta ? 'correct' : 'incorrect'}`}
+                          disabled={yaRevisado}
+                          style={{ cursor: yaRevisado ? 'not-allowed' : 'pointer', opacity: yaRevisado ? 0.6 : 1 }}
                           onClick={() => handleOracionChange(i, "correcta", !o.correcta)}
                         >
                           {o.correcta ? '✓ Correcta' : '✗ Incorrecta'}
@@ -267,9 +301,9 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
                         className="sentence-input"
                         value={o.oracion}
                         placeholder="Escribe la oración aquí..."
-                        onChange={(e) =>
-                          handleOracionChange(i, "oracion", e.target.value)
-                        }
+                        disabled={yaRevisado}
+                        style={{ cursor: yaRevisado ? 'not-allowed' : 'text' }}
+                        onChange={(e) => handleOracionChange(i, "oracion", e.target.value)}
                       />
                     </div>
                   ))}
@@ -290,27 +324,25 @@ const VNESTEditor = ({ open, onClose, exercise }) => {
                 onClick={() => onClose(false)}
                 disabled={saving}
               >
-                Cancelar
+                {yaRevisado ? 'Cerrar' : 'Cancelar'}
               </button>
-              <button
-                className="btn btn-primary d-flex align-items-center gap-2"
-                onClick={handleSave}
-                disabled={saving}
-              >
-                {saving ? (
-                  <>
-                    <span
-                      className="spinner-border spinner-border-sm"
-                      role="status"
-                    ></span>
-                    Guardando...
-                  </>
-                ) : (
-                  <>
-                    <FaSave /> Guardar cambios
-                  </>
-                )}
-              </button>
+              {/* 🔒 Botón guardar oculto si ya estaba revisado */}
+              {!yaRevisado && (
+                <button
+                  className="btn btn-primary d-flex align-items-center gap-2"
+                  onClick={handleSave}
+                  disabled={saving}
+                >
+                  {saving ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm" role="status"></span>
+                      Guardando...
+                    </>
+                  ) : (
+                    <><FaSave /> Guardar cambios</>
+                  )}
+                </button>
+              )}
             </footer>
           </>
         )}

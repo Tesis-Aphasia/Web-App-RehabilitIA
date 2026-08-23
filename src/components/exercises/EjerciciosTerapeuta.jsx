@@ -13,6 +13,8 @@ import SREditor from "../editExercises/SREditor";
 import VNESTExerciseModal from "./VNESTExerciseModal";
 import SRExerciseModal from "./SRExerciseModal";
 import { auth } from "../../services/firebase";
+import VNESTImageReviewModal from "../editExercises/VNESTImageReviewModal";
+import ImageReviewModal from "../editExercises/SRImageReviewModal";
 
 import "./EjerciciosTerapeuta.css";
 
@@ -27,6 +29,8 @@ const EjerciciosTerapeuta = () => {
   const [loadingModal, setLoadingModal] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [therapistId, setTherapistId] = useState(null);
+  const [reviewImagesExercise, setReviewImagesExercise] = useState(null);
+const [reviewImagesTerapia, setReviewImagesTerapia] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -151,6 +155,11 @@ const EjerciciosTerapeuta = () => {
 
   const handleGenerateNew = () => navigate("/ejercicios/nuevo");
 
+  const handleReviewImages = (exercise) => {
+  setReviewImagesExercise(exercise);
+  setReviewImagesTerapia(exercise.terapia);
+};
+
   return (
     <div className="page-container">
       <Navbar active="ejercicios" />
@@ -190,12 +199,14 @@ const EjerciciosTerapeuta = () => {
             exercises={exercises}
             onEdit={handleEdit}
             onView={handleViewExercise}
+            onReviewImages={handleReviewImages} 
           />
         ) : (
           <SRETable
             exercises={exercises}
             onEdit={handleEdit}
             onView={handleViewExercise}
+            onReviewImages={handleReviewImages} 
           />
         )}
       </main>
@@ -233,7 +244,31 @@ const EjerciciosTerapeuta = () => {
             setSelectedExercise(null);
           }}
         />
+        
       )}
+
+      {/* Modal imágenes SR */}
+      <ImageReviewModal
+        open={!!reviewImagesExercise && reviewImagesTerapia === "SR"}
+        exercise={reviewImagesExercise}
+        terapia="SR"
+        onClose={(refresh) => {
+          setReviewImagesExercise(null);
+          setReviewImagesTerapia(null);
+          if (refresh) setRefreshKey((prev) => prev + 1);
+        }}
+      />
+      
+      {/* Modal imágenes VNEST */}
+      <VNESTImageReviewModal
+        open={!!reviewImagesExercise && reviewImagesTerapia === "VNEST"}
+        exercise={reviewImagesExercise}
+        onClose={(refresh) => {
+          setReviewImagesExercise(null);
+          setReviewImagesTerapia(null);
+          if (refresh) setRefreshKey((prev) => prev + 1);
+        }}
+      />
     </div>
   );
 };

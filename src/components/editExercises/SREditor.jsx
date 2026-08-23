@@ -4,7 +4,7 @@ import {
   getExerciseDetails,
   updateExerciseSR,
 } from "../../services/exercisesService";
-import { FaSave, FaTimes, FaCheckCircle } from "react-icons/fa";
+import { FaSave, FaTimes, FaCheckCircle, FaLock } from "react-icons/fa";
 import "./SREditor.css";
 
 const SREditor = ({ open, onClose, exercise }) => {
@@ -13,6 +13,7 @@ const SREditor = ({ open, onClose, exercise }) => {
   const [error, setError] = useState("");
   const [form, setForm] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [yaRevisado, setYaRevisado] = useState(false); // 🔒 bloqueado si ya estaba revisado
 
   // 🔹 Cargar detalles SR
   useEffect(() => {
@@ -25,10 +26,13 @@ const SREditor = ({ open, onClose, exercise }) => {
         const extra =
           Array.isArray(data) && data.length > 0 ? data[0] : data || {};
 
+        const revisadoOriginal = Boolean(exercise.revisado);
+        setYaRevisado(revisadoOriginal); // 🔒 guarda el estado original
+
         setForm({
           pregunta: extra.pregunta || "",
           rta_correcta: extra.rta_correcta || "",
-          revisado: Boolean(exercise.revisado),
+          revisado: revisadoOriginal,
         });
       } catch (err) {
         setError("No se pudo cargar el ejercicio.");
@@ -42,7 +46,7 @@ const SREditor = ({ open, onClose, exercise }) => {
 
   // 🔹 Guardar cambios
   const handleSave = async () => {
-    if (!exercise || !form) return;
+    if (!exercise || !form || yaRevisado) return; // 🔒 no guarda si ya estaba revisado
     setError("");
     setSaving(true);
     setSuccess(false);
@@ -100,6 +104,25 @@ const SREditor = ({ open, onClose, exercise }) => {
             </div>
           ) : (
             <>
+              {/* === BANNER DE BLOQUEADO === */}
+              {yaRevisado && (
+                <div style={{
+                  background: "#f0fdf4",
+                  border: "1px solid #86efac",
+                  borderRadius: "10px",
+                  padding: "12px 16px",
+                  marginBottom: "16px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  fontSize: "14px",
+                  color: "#166534",
+                }}>
+                  <FaLock size={14} />
+                  Este ejercicio ya fue revisado y no puede modificarse.
+                </div>
+              )}
+
               {/* === ESTADO DE REVISIÓN === */}
               <section className="sr-section">
                 <div className="review-toggle-container">
@@ -108,17 +131,26 @@ const SREditor = ({ open, onClose, exercise }) => {
                       {form.revisado ? '✅ Ejercicio Revisado' : '⏳ Pendiente de Revisión'}
                     </h5>
                     <p className="review-description">
-                      {form.revisado 
+                      {form.revisado
                         ? 'Este ejercicio ha sido revisado y está listo para usar'
                         : 'Marca este ejercicio como revisado cuando hayas verificado su contenido'
                       }
                     </p>
                   </div>
+                  {/* 🔒 Toggle deshabilitado si ya estaba revisado */}
                   <button
                     className={`toggle-switch ${form.revisado ? 'active' : ''}`}
-                    onClick={() => setForm((p) => ({ ...p, revisado: !p.revisado }))}
+                    onClick={() => {
+                      if (yaRevisado) return;
+                      setForm((p) => ({ ...p, revisado: !p.revisado }));
+                    }}
                     type="button"
                     aria-label="Toggle revision status"
+                    disabled={yaRevisado}
+                    style={{
+                      opacity: yaRevisado ? 0.6 : 1,
+                      cursor: yaRevisado ? 'not-allowed' : 'pointer',
+                    }}
                   >
                     <span className="toggle-slider"></span>
                     <span className="toggle-label">
@@ -140,7 +172,7 @@ const SREditor = ({ open, onClose, exercise }) => {
                     <span className="info-label">Paciente:</span>
                     <span className="info-value">{exercise.pacienteEmail || "—"}</span>
                   </div>
-                  </div>
+                </div>
               </section>
 
               {/* Formulario principal */}
@@ -149,30 +181,36 @@ const SREditor = ({ open, onClose, exercise }) => {
                 <div className="sr-form">
                   <div className="form-group">
                     <label>Pregunta</label>
+                    {/* 🔒 Input deshabilitado si ya estaba revisado */}
                     <input
                       type="text"
                       className="form-control"
                       placeholder="Escribe la pregunta del ejercicio"
                       value={form.pregunta}
+                      disabled={yaRevisado}
                       onChange={(e) =>
-                        setForm((p) => ({ ...p, pregunta: e.target.value }))
+                        !yaRevisado && setForm((p) => ({ ...p, pregunta: e.target.value }))
                       }
+                      style={{ cursor: yaRevisado ? 'not-allowed' : 'text' }}
                     />
                   </div>
 
                   <div className="form-group">
                     <label>Respuesta correcta</label>
+                    {/* 🔒 Input deshabilitado si ya estaba revisado */}
                     <input
                       type="text"
                       className="form-control"
                       placeholder="Escribe la respuesta esperada"
                       value={form.rta_correcta}
+                      disabled={yaRevisado}
                       onChange={(e) =>
-                        setForm((p) => ({
+                        !yaRevisado && setForm((p) => ({
                           ...p,
                           rta_correcta: e.target.value,
                         }))
                       }
+                      style={{ cursor: yaRevisado ? 'not-allowed' : 'text' }}
                     />
                   </div>
 
@@ -196,28 +234,31 @@ const SREditor = ({ open, onClose, exercise }) => {
               onClick={() => onClose(false)}
               disabled={saving}
             >
-              Cancelar
+              {yaRevisado ? 'Cerrar' : 'Cancelar'}
             </button>
-            <button
-              className="btn-primary d-flex align-items-center gap-2"
-              onClick={handleSave}
-              disabled={saving}
-            >
-              {saving ? (
-                <>
-                  <span
-                    className="spinner-border spinner-border-sm"
-                    role="status"
-                    aria-hidden="true"
-                  ></span>
-                  Guardando...
-                </>
-              ) : (
-                <>
-                  <FaSave /> Guardar cambios
-                </>
-              )}
-            </button>
+            {/* 🔒 Botón guardar oculto si ya estaba revisado */}
+            {!yaRevisado && (
+              <button
+                className="btn-primary d-flex align-items-center gap-2"
+                onClick={handleSave}
+                disabled={saving}
+              >
+                {saving ? (
+                  <>
+                    <span
+                      className="spinner-border spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                    Guardando...
+                  </>
+                ) : (
+                  <>
+                    <FaSave /> Guardar cambios
+                  </>
+                )}
+              </button>
+            )}
           </footer>
         )}
       </div>
