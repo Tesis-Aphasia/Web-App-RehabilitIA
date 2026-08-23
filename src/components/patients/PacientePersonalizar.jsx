@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { getPatientById } from "../../services/patientService";
-import { personalizeExercise } from "../../services/exercisesService";
+import {
+  personalizeExercise,
+  getExerciseById,
+  getExerciseDetails,
+} from "../../services/exercisesService";
 import "./PacientePersonalizar.css";
 
 const PacientePersonalizar = ({ open, onClose, pacienteId }) => {
@@ -20,6 +24,21 @@ const PacientePersonalizar = ({ open, onClose, pacienteId }) => {
     setMessage("");
 
     try {
+      const baseExercise = await getExerciseById(baseExerciseId.trim());
+      if (!baseExercise) {
+        throw new Error(`No existe el ejercicio base '${baseExerciseId.trim()}'.`);
+      }
+
+      const baseDetails = await getExerciseDetails(
+        baseExerciseId.trim(),
+        baseExercise.terapia
+      );
+      if (!baseDetails?.aprobado) {
+        throw new Error(
+          "Este ejercicio base aún no ha sido aprobado por un terapeuta. Apruébalo antes de personalizarlo."
+        );
+      }
+
       const patientData = await getPatientById(pacienteId);
       if (!patientData)
         throw new Error("No se encontró el perfil del paciente.");
